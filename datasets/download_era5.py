@@ -52,12 +52,17 @@ SWISS_AREA = [48.0, 5.5, 45.5, 11.0]
 # (open_mfdataset by_coords) with the existing files and match the model grid.
 ERA5_LAND_AREA = [48.2, 5.0, 45.4, 11.0]
 
-ERA5_LAND_DIR = Path("datasets/ERA5_Land")
+# All output dirs are anchored to this script's own directory (datasets/), so
+# the files land where datasets.build_data_paths() expects them regardless of
+# the current working directory.
+DATASETS_DIR = Path(__file__).resolve().parent
+
+ERA5_LAND_DIR = DATASETS_DIR / "ERA5_Land"
 GEOPOTENTIAL_DIR = ERA5_LAND_DIR / "geopotential"
 
 # Pressure-level fields live alongside ERA5-Land but in their own tree because
 # they carry an extra `pressure_level` dimension.
-ERA5_PL_DIR = Path("datasets/ERA5_PressureLevels")
+ERA5_PL_DIR = DATASETS_DIR / "ERA5_PressureLevels"
 
 # Vertical resolution: ERA5 offers 37 pressure levels, but for a near-surface
 # downscaling task over the Alps the lower/mid troposphere carries the relevant
@@ -179,7 +184,7 @@ DEFAULT_PL_FIELDS = ["z", "t", "q"]
 # ERA5 single-level surface fields from reanalysis-era5-single-levels (0.25° grid,
 # same resolution as the pressure-level dataset). Used as a surface anchor when
 # running the model in atmospheric-only mode (USE_SFC_ATMOS=True).
-ERA5_SFC_DIR = Path("datasets/ERA5_Surface")
+ERA5_SFC_DIR = DATASETS_DIR / "ERA5_Surface"
 
 ERA5_SURFACE_FIELDS = {
     "t2m": {
