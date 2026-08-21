@@ -1,7 +1,6 @@
 """
-ConvCNP models for downscaling temperature, precipitation (Bernoulli-
-Gamma distribution) and precipitation (Bernoulli-Gamma-Generalised Pareto
-distribution)
+ConvCNP models for downscaling temperature and precipitation
+(Bernoulli-Gamma distribution)
 """
 
 import torch
@@ -10,7 +9,7 @@ import torch.nn.functional as F
 
 from .encoder import Encoder
 from .mlp import MLP
-from .final_layers import GaussianFinalLayer, GammaFinalLayer, GammaGPFinalLayer
+from .final_layers import GaussianFinalLayer, GammaFinalLayer
 from .cnn import CNN, ResConvBlock
 
 class TmaxBiasConvCNP(nn.Module):
@@ -109,53 +108,3 @@ class GammaBiasConvCNP(nn.Module):
             beta.view(*beta.shape, 1)], dim = 2)
                 
         return out
-
-class GammaGPBiasConvCNP(nn.Module):
-    """
-    Bias correction for precipitation (Bernoulli-
-    Gamma-Generalised Pareto) 
-    Parameters:
-    ----------
-    decoder: convolutional architecture
-    in_channels: Int
-        Total number of context variables
-    ls: float
-        Initial length scale for the RBF kernel
-    """
-
-    def __init__(self, 
-                 x_context,
-                 x_target,
-                 decoder,
-                 in_channels = 1, 
-                 ls = 0.1):
-        super().__init__()
-        self.in_channels = in_channels
-        self.activation = torch.relu
-
-        self.encoder = Encoder(in_channels = in_channels)
-        self.mlp = MLP(in_channels = 128,
-            out_channels = 7,
-            hidden_channels = 64,
-            hidden_layers = 4)
-        self.decoder = decoder
-        self.out_layer = GammaGPFinalLayer(
-            target_x = x_target,
-            grid_x = x_context[:, :, 0],
-            grid_y = x_context[:, :, 1],
-            init_ls = ls,
-            n_params = 7
-        )
-
-    def forward(self, h, mask):
-
-        # Encode with set convolution
-        h = self.activation(self.encoder(h, mask))
-        # Decode with CNN
-        h = self.activation(self.decoder(h))
-        # MLP 
-        h = self.mlp(h)
-        # out layer
-        params = self.out_layer(h)
-        
-        return params

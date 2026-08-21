@@ -9,7 +9,7 @@ import torch
 import numpy as np
 import os
 import scipy
-from scipy.stats import NearConstantInputWarning
+from scipy.stats import NearConstantInputWarning, ConstantInputWarning
 import warnings
 from .utils import log_exp, generate_context_mask, get_fold_data
 
@@ -57,7 +57,7 @@ def select_holdout_day(fold: int, holdout_start: int, holdout_end: int, seed: in
     return holdout_start + day_offset
 
 
-def train_batch_elev(task, opt, model, ll, elev, dists, seasonal=None, device=None):
+def train_batch_elev(task, opt, model, ll, elev, dists, seasonal=None, device=None, grad_clip=None):
     """
     Train one batch
     Parameters:
@@ -71,6 +71,7 @@ def train_batch_elev(task, opt, model, ll, elev, dists, seasonal=None, device=No
     dists: distances tensor
     seasonal: seasonal features for this batch (batch, 2) or None
     device: torch.device (optional)
+    grad_clip: optional max gradient norm for clipping (None disables clipping)
     """
     batch_size, channels, x, y = task['y_context'].shape
 
@@ -86,12 +87,15 @@ def train_batch_elev(task, opt, model, ll, elev, dists, seasonal=None, device=No
     # Backprop
     obj = -ll(task['y_target'], v)
     obj.backward()
+    if grad_clip is not None:
+        torch.nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
     opt.step()
     opt.zero_grad()
 
     return obj, opt, model
 
-def eval_epoch_elev(model, held_out, ll, elev, dists, y_target_t, get_value, device=None):
+def eval_epoch_elev(model, held_out, ll, elev, dists, y_target_t, get_value,
+                    device=None, crps_fn=None):
     """
     Calculate nll on held out dataset after each epoch.
 
@@ -105,6 +109,9 @@ def eval_epoch_elev(model, held_out, ll, elev, dists, y_target_t, get_value, dev
     y_target_t: target transformer (unused, kept for API compatibility)
     get_value: function to extract predictions from model output
     device: torch.device (optional)
+    crps_fn: optional CRPS diagnostic ``fn(target, v) -> -mean(CRPS)`` evaluated
+        on the raw distribution parameters (before ``get_value``). When provided,
+        the returned tuple includes a scalar mean CRPS; otherwise CRPS is ``nan``.
     """
     model.eval()
 
@@ -127,6 +134,14 @@ def eval_epoch_elev(model, held_out, ll, elev, dists, y_target_t, get_value, dev
     # Calculate NLL
     predictions = torch.cat(predictions)
     eval_ll = -ll(targets_complete, predictions)
+
+    # Optional CRPS diagnostic, evaluated on the raw distribution parameters
+    # (before get_value collapses them to a point estimate). crps_fn follows the
+    # same -mean(CRPS) score-to-maximize convention as the loss, so negate it.
+    if crps_fn is not None:
+        crps = -crps_fn(targets_complete, predictions).item()
+    else:
+        crps = float('nan')
 
     # Transform predicted parameters to amounts
     predictions = get_value(predictions)
@@ -154,7 +169,13 @@ def eval_epoch_elev(model, held_out, ll, elev, dists, y_target_t, get_value, dev
 
         try:
             with warnings.catch_warnings():
+                # Constant predictions (common early in training, esp. for precip
+                # where many points are predicted dry) make the correlation
+                # undefined; scipy warns per point. Without suppressing BOTH
+                # variants the eval emits one warning per target point per epoch,
+                # which bloated run.log to ~100 MB on a dense grid.
                 warnings.simplefilter("ignore", category=NearConstantInputWarning)
+                warnings.simplefilter("ignore", category=ConstantInputWarning)
                 maes[st] = np.mean(np.abs(true_mean - pred_mean))
                 pearsons[st] = scipy.stats.pearsonr(pred_mean, true_mean)[0]
                 spearmans[st] = scipy.stats.spearmanr(pred_mean, true_mean).correlation
@@ -170,10 +191,10 @@ def eval_epoch_elev(model, held_out, ll, elev, dists, y_target_t, get_value, dev
     median_mae = np.median(maes[~np.isnan(maes)])
     median_pearson = np.median(pearsons[~np.isnan(pearsons)])
     median_spearman = np.median(spearmans[~np.isnan(spearmans)])
-    
-    return eval_ll, median_mae, median_pearson, median_spearman
 
-def train_epoch_elev(model, opt, training_data, ll, elev, dists, device=None):
+    return eval_ll, median_mae, median_pearson, median_spearman, crps
+
+def train_epoch_elev(model, opt, training_data, ll, elev, dists, device=None, grad_clip=None):
     """
     Outer training loop for each epoch.
 
@@ -193,7 +214,7 @@ def train_epoch_elev(model, opt, training_data, ll, elev, dists, device=None):
     batch_objs = []
     for task in training_data:
         # Generate a mask
-        obj, opt, model = train_batch_elev(task, opt, model, ll, elev, dists, device=device)
+        obj, opt, model = train_batch_elev(task, opt, model, ll, elev, dists, device=device, grad_clip=grad_clip)
         batch_objs.append(float(obj.item()))
     train_ll = np.mean(np.array(batch_objs)[-5:])
 
@@ -216,7 +237,11 @@ def train_elev(model,
           patience=10,
           stats_file=None,
           seasonal=None,
-          device=None):
+          device=None,
+          grad_clip=None,
+          epoch_callback=None,
+          crps_fn=None,
+          init_best_obj=5.0):
     """
     Top level training loop for the model.
 
@@ -225,6 +250,9 @@ def train_elev(model,
     model: convCNP model
     opt: Optimizer
     ll: loss function
+    crps_fn: optional CRPS diagnostic ``fn(target, v) -> -mean(CRPS)`` reported
+        per epoch alongside the loss (e.g. for precip runs, so NLL- and CRPS-
+        trained models share a common CRPS curve). ``None`` disables it.
     elev: elevation features tensor (n_points, 3)
     dists: distances tensor
     y_context: input context tensor (time, channels, lat, lon)
@@ -246,7 +274,13 @@ def train_elev(model,
 
     test_score = []
 
-    best_obj = 5
+    # Checkpointing threshold. The default 5 is the historical from-scratch value
+    # and is kept so every existing run is bit-for-bit unchanged. A warm start
+    # passes float('inf') instead: it already begins near its optimum, and its
+    # objective may live on a different scale (CRPS vs NLL), so an arbitrary
+    # constant could either never be beaten -- leaving no checkpoint at all -- or
+    # be beaten trivially. With inf the first epoch always checkpoints.
+    best_obj = init_best_obj
     epochs_without_improvement = 0
 
     # Run the training loop.
@@ -276,9 +310,10 @@ def train_elev(model,
             )
 
             # Compute training objective.
-            train_obj = train_epoch_elev(model, opt, training_data, ll, elev, dists, device=device)
-            test_obj, median_mae, median_pearson, median_spearman = eval_epoch_elev(
-                model, held_out, ll, elev, dists, y_target_t, get_value, device=device)
+            train_obj = train_epoch_elev(model, opt, training_data, ll, elev, dists, device=device, grad_clip=grad_clip)
+            test_obj, median_mae, median_pearson, median_spearman, test_crps = eval_epoch_elev(
+                model, held_out, ll, elev, dists, y_target_t, get_value, device=device,
+                crps_fn=crps_fn)
             test_score.append(test_obj)
 
             # Timing statistics
@@ -301,9 +336,10 @@ def train_elev(model,
                 else:
                     return f"{s}s"
 
-            print(f"{timestamp}   Fold {fold+1}/{n_folds}, elapsed {format_duration(elapsed_in_fold)}, est. remaining {format_duration(estimated_remaining)} | Epoch {epoch} took {format_duration(epoch_duration)} | test NLL {test_obj:.3f} | train NLL {train_obj:.3f} | med MAE {median_mae:.3f} | med Pears {median_pearson:.3f} | med Spear {median_spearman:.3f}")
+            crps_str = "" if np.isnan(test_crps) else f" | test CRPS {test_crps:.3f}"
+            print(f"{timestamp}   Fold {fold+1}/{n_folds}, elapsed {format_duration(elapsed_in_fold)}, est. remaining {format_duration(estimated_remaining)} | Epoch {epoch} took {format_duration(epoch_duration)} | test NLL {test_obj:.3f} | train NLL {train_obj:.3f}{crps_str} | med MAE {median_mae:.3f} | med Pears {median_pearson:.3f} | med Spear {median_spearman:.3f}")
 
-            writer.writerow([fold, median_mae, median_pearson, median_spearman, epoch, train_obj, test_obj.item()])
+            writer.writerow([fold, median_mae, median_pearson, median_spearman, epoch, train_obj, test_obj.item(), test_crps])
             f.flush()
 
             if test_obj < best_obj:
@@ -313,10 +349,34 @@ def train_elev(model,
                     'loss': test_score}, os.path.join(output_dir, f"model_fold_{fold}"))
                 best_obj = test_obj
                 epochs_without_improvement = 0
+                improved = True
             else:
                 epochs_without_improvement += 1
+                improved = False
+
+            # Realtime status hook (no-op unless a callback is provided).
+            if epoch_callback is not None:
+                epoch_callback({
+                    'fold': fold,
+                    'n_folds': n_folds,
+                    'epoch': epoch,
+                    'n_epochs': n_epochs,
+                    'test_nll': float(test_obj),
+                    'train_nll': float(train_obj),
+                    'mae': float(median_mae),
+                    'pearson': float(median_pearson),
+                    'spearman': float(median_spearman),
+                    'crps': float(test_crps),
+                    'epoch_duration': epoch_duration,
+                    'best_nll': float(best_obj),
+                    'improved': improved,
+                    'epochs_without_improvement': epochs_without_improvement,
+                    'estimated_remaining_fold': estimated_remaining,
+                })
 
             # Early stopping check
             if patience is not None and epochs_without_improvement >= patience:
                 print(f'Early stopping fold {fold} at epoch {epoch}: no improvement for {patience} epochs')
+                if epoch_callback is not None:
+                    epoch_callback({'fold': fold, 'n_folds': n_folds, 'early_stopped': True, 'epoch': epoch})
                 break

@@ -8,7 +8,7 @@ import torch.nn.functional as F
 
 from .encoder import Encoder
 from .mlp import MLP
-from .final_layers import GaussianFinalLayer, GammaFinalLayer, GammaGPFinalLayer
+from .final_layers import GaussianFinalLayer, GammaFinalLayer
 from .cnn import CNN, ResConvBlock
 from .utils import force_positive
 
@@ -25,11 +25,13 @@ class TmaxBiasConvCNPElev(nn.Module):
     use_seasonal_in_mlp: whether to include seasonal features (cos/sin of day-of-year)
     """
 
-    def __init__(self, decoder, in_channels=1, ls=0.1, use_seasonal_in_mlp=True):
+    def __init__(self, decoder, in_channels=1, ls=0.1, use_seasonal_in_mlp=True, encoder=None):
 
         super().__init__()
 
-        self.encoder = Encoder(in_channels)
+        # A prebuilt (e.g. targeted/grouped) encoder may be injected; otherwise
+        # fall back to the default flat set-convolution encoder.
+        self.encoder = encoder if encoder is not None else Encoder(in_channels)
         self.decoder = decoder
         self.use_seasonal_in_mlp = use_seasonal_in_mlp
 
@@ -109,14 +111,17 @@ class GammaBiasConvCNPElev(nn.Module):
                  decoder,
                  in_channels=1,
                  ls=0.1,
-                 use_seasonal_in_mlp=True):
+                 use_seasonal_in_mlp=True,
+                 encoder=None):
         super().__init__()
         self.in_channels = in_channels
         self.activation = torch.relu
         self.sigmoid = nn.Sigmoid()
         self.use_seasonal_in_mlp = use_seasonal_in_mlp
 
-        self.encoder = Encoder(in_channels=in_channels)
+        # A prebuilt (e.g. targeted/grouped) encoder may be injected; otherwise
+        # fall back to the default flat set-convolution encoder.
+        self.encoder = encoder if encoder is not None else Encoder(in_channels=in_channels)
         self.mlp = MLP(in_channels=128,
             out_channels=3,
             hidden_channels=64,
@@ -155,9 +160,9 @@ class GammaBiasConvCNPElev(nn.Module):
         h = self.mlp(h)
         # out layer
         rho, alpha, beta = self.out_layer(h, dists)
-        out = torch.cat([rho.view(*rho.shape, 1),
-            alpha.view(*alpha.shape, 1),
-            beta.view(*beta.shape, 1)], dim=2)
+        # GammaFinalLayer already returns each parameter with a trailing dim of 1
+        # ((batch, n_points, 1)); concatenate into (batch, n_points, 3).
+        out = torch.cat([rho, alpha, beta], dim=2)
 
         # Do elevation (and seasonal)
         batch_size = out.shape[0]
@@ -165,7 +170,7 @@ class GammaBiasConvCNPElev(nn.Module):
 
         elev_expanded = elev.repeat(batch_size, 1, 1)  # (batch, n_points, 3)
 
-        if self.use_seasonal and seasonal is not None:
+        if self.use_seasonal_in_mlp and seasonal is not None:
             # seasonal is (batch, 2), expand to (batch, n_points, 2)
             seasonal_expanded = seasonal.unsqueeze(1).expand(-1, n_points, -1)
             out = torch.cat([out, elev_expanded, seasonal_expanded], dim=2)
@@ -173,7 +178,10 @@ class GammaBiasConvCNPElev(nn.Module):
             out = torch.cat([out, elev_expanded], dim=2)
 
         out = self.elev_mlp(out)
-        out[..., 0] = self.sigmoid(out[..., 0])
+        # Clamp the dry-probability away from 0/1 so the Bernoulli-Gamma loss's
+        # log(rho)/log(1-rho) terms stay finite (matches GammaFinalLayer's clamp;
+        # the elevation MLP would otherwise let sigmoid saturate to 0 or 1).
+        out[..., 0] = torch.clamp(self.sigmoid(out[..., 0]), 1e-5, 1 - 1e-5)
         out[..., 1:] = force_positive(out[..., 1:])
 
         return out

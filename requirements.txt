@@ -1,3 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cu124
 Cartopy>=0.25.0
 cdsapi>=0.7.7
 choreographer>=1.2.1
@@ -16,7 +17,7 @@ scikit-learn>=1.7.1
 scipy>=1.16.1
 seaborn>=0.13.2
 skorch>=0.8.0
-torch>=2.5.0
+torch==2.6.0+cu124
 tqdm>=4.67.1
 xarray>=2025.10.1
 zarr>=3.1.5

@@ -4,7 +4,7 @@ Models for multivariate downscaling - predicting P(Tmax|precipitation)
 
 from .models.encoder import Encoder
 from .models.mlp import MLP
-from .models.final_layers import GaussianFinalLayer, GammaFinalLayer, GammaGPFinalLayer
+from .models.final_layers import GaussianFinalLayer, GammaFinalLayer
 from .models.cnn import CNN, ResConvBlock
 from .models.utils import force_positive
 

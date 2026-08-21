@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.checkpoint import checkpoint
 
 class ParamLayer(nn.Module):
     """
@@ -9,18 +10,44 @@ class ParamLayer(nn.Module):
     -----------
     init_ls: float
         initial length scale for the RBF kernel
+    chunk_size: int
+        number of target points to process per chunk. The full
+        (n_points, lat, lon) RBF kernel is never materialised at once; instead
+        each chunk's kernel is built, contracted, and (in training) recomputed
+        in the backward pass via gradient checkpointing. This bounds peak memory
+        to ~one chunk's kernel rather than n_params * (n_points * grid), which is
+        what previously overflowed the 8 GB GPU on dense target grids.
     """
 
-    def __init__(self, init_ls):        
+    def __init__(self, init_ls, chunk_size=16384):
         super().__init__()
         self.init_ls = torch.nn.Parameter(torch.tensor([init_ls]))
         self.init_ls.requires_grad = True
+        self.chunk_size = chunk_size
+
+    def _chunk(self, wt_flat, dists_chunk):
+        # RBF kernel for this chunk of target points, contracted over the
+        # spatial dims (lat, lon) with a single GEMM. einsum('bij,pij->bp')
+        # would broadcast to a (batch, n_points, lat, lon) intermediate before
+        # summing; flattening into a matmul gives the identical result without
+        # that intermediate.
+        kernel = torch.exp(-0.5 * dists_chunk / self.init_ls ** 2)
+        p = dists_chunk.shape[0]
+        return wt_flat @ kernel.reshape(p, -1).t()
 
     def forward(self, wt, dists):
-        # Calculate rbf kernel
-        kernel = torch.exp(-0.5 * dists / self.init_ls ** 2)
-        vals = torch.einsum('bij,pij->bpij', wt, kernel)
-        return torch.sum(vals, (2, 3))
+        b = wt.shape[0]
+        wt_flat = wt.reshape(b, -1)
+        n_points = dists.shape[0]
+        outs = []
+        for start in range(0, n_points, self.chunk_size):
+            dists_chunk = dists[start:start + self.chunk_size]
+            if self.training and torch.is_grad_enabled():
+                # Recompute the kernel in backward instead of storing it.
+                outs.append(checkpoint(self._chunk, wt_flat, dists_chunk, use_reentrant=False))
+            else:
+                outs.append(self._chunk(wt_flat, dists_chunk))
+        return torch.cat(outs, dim=1)
 
 class FinalLayer(nn.Module):
     """
@@ -116,34 +143,3 @@ class GammaFinalLayer(FinalLayer):
         beta = torch.clamp(beta, min = 1e-5, max=1e5)
 
         return rho, alpha, beta
-
-class GammaGPFinalLayer(FinalLayer):
-    """
-    Final layer for a Bernoulli-Gamma-Generalised Pareto distribution
-    """
-
-    def __init__(self,  
-                 init_ls,
-                 n_params):
-
-        FinalLayer.__init__(self, 
-                 init_ls, 
-                 n_params)
-
-    def forward(self, h, dists):
-
-        params = [self.param_layers[i](h[..., i], dists) 
-            for i in range(7)]
-        # Do rho
-        params[0] = self.sigmoid(params[0]).view(*params[0].shape, 1)
-        params_rho = torch.clamp(params[0], min = 1e-5, max=1-1e-5)
-        
-        # Other parameters
-        params = [self._force_positive(params[i]).view(*(params[i].shape), 1) 
-                     for i in range(1,7)]
-        params = [torch.clamp(params[i], min = 1e-5, max=1e5) 
-                     for i in range(6)]
-        params.insert(0, params_rho)
-        params[-2] = params[-2]+2.78
-
-        return torch.cat(params, dim = 2)

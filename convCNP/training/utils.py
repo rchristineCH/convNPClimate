@@ -1,6 +1,5 @@
 import torch
 import numpy as np
-from torch.distributions.gamma import Gamma
 from torch.distributions.normal import Normal
 
 def shuffle_data(context, task, seasonal=None):
@@ -105,8 +104,9 @@ def make_r_mask(target_vals):
     """
     Make the r mask for the Bernoulli precipitation distribution
     """
-    # Make r mask
-    r = torch.ones(target_vals.shape[0]).cuda()
+    # Make r mask (on the same device as the targets, so this works on
+    # CPU/MPS as well as CUDA).
+    r = torch.ones(target_vals.shape[0], device=target_vals.device)
     r[target_vals==0] = 0
     
     # Set the target vals to one to stop the pesky error
@@ -133,24 +133,6 @@ def generate_context_mask(batch_size, n_channels, x, y, device=None):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     return torch.ones(batch_size, n_channels, x, y, device=device)
 
-def get_value_pr_gammagp(p):
-    """
-    Return predicted mean to calculate stats each epoch
-    """
-
-    # output.shape = [time, stations]
-    output = torch.zeros(p.shape[0], 3010).cuda()
-
-    for st in range(3010):
-        # For each need to calculate the normalisation 
-        x = torch.linspace(0.2, 150, 1499)
-        x = x.view(-1, 1).repeat(1, p.shape[0]).cuda()
-        norms = torch.sum(tbi_func(x, p[:, st, :]), dim = 0)
-        ev = torch.sum(x*(1/norms)*tbi_func(x, p[:, st, :]), dim = 0)       
-        output[:, st][p[:,st,0]>0.5] = ev
-
-    return output
-
 def get_value_tmax(p):
     """
     Return predicted mean to calculate stats each epoch
@@ -160,27 +142,3 @@ def get_value_tmax(p):
 def get_sigma_tmax(p):
     """Return predicted sigma (standard deviation) for tmax model."""
     return p[:, :, 1]
-
-def tbi_func(x, v):
-    """
-    Evaluate Bernoulli-gamma-GP mixture likelihood
-    Parameters:
-    ----------
-    v: torch.Tensor(batch*86, channels)
-        parameters from model
-    x: torch.Tensor(batch*86)
-        target vals to eval at
-    """
-    # Gamma distribution
-    g = Gamma(concentration = v[:,2], rate = v[:,3])
-    gamma = torch.exp(torch.clamp(g.log_prob(x), min=-1e5, max=1e5))
-
-    # Weight term
-    weight_term = (1/2)+(1/np.pi)*torch.atan((x-v[:,5])/v[:,6])
-
-    # GP distribution
-    gp = (1/v[:,4])*(1+(v[:,1]*x/v[:,4]))**((-1/v[:,1])-1)
-
-    # total
-    tbi = gamma*(1-weight_term)+gp*weight_term
-    return torch.clamp(tbi, min = 1e-5)
