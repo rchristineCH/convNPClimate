@@ -1,0 +1,9 @@
+method,grouping,feature,metric,importance,std,n_channels
+lime,channel,data,pred_tmax_degC,0.22151860660466838,3.492778127409019,1
+lime,channel,lat,pred_tmax_degC,-0.007101650689527613,0.007843354104580608,1
+lime,channel,lon,pred_tmax_degC,-0.0070285601353527495,0.003209701283758097,1
+lime,channel,cos_time,pred_tmax_degC,0.3094267619565089,0.3227385516636572,1
+lime,channel,sin_time,pred_tmax_degC,0.13654757238706156,0.3391866735491461,1
+lime,channel,elevation,pred_tmax_degC,0.007462238406640551,0.010159229049889992,1
+lime,variable,variable=data,pred_tmax_degC,0.22151860660466838,3.492778127409019,1
+lime,variable,variable=scaffold,pred_tmax_degC,0.4393063619253307,0.2981338235571027,5

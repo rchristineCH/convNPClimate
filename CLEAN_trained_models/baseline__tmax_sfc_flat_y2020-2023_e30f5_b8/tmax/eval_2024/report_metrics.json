@@ -1,0 +1,53 @@
+{
+  "model_dir": "CLEAN_trained_models/baseline__tmax_sfc_flat_y2020-2023_e30f5_b8/tmax",
+  "variable": "tmax",
+  "encoder": "flat",
+  "grid_mode": "fine surface",
+  "n_folds_evaluated": 5,
+  "n_target_points": 88800,
+  "holdout_days": 366,
+  "overall": {
+    "mae_degC": 1.4748291969299316,
+    "rmse_degC": 1.9512274265289307,
+    "bias_degC": 0.13306865096092224,
+    "crps_degC": 1.076962110282836,
+    "skill_score": 0.576428359050905
+  },
+  "correlations": {
+    "uncertainty_error": -0.0875950976724017,
+    "altitude_error": 0.16803090920121652,
+    "mtpi_error": 0.002344656245362926,
+    "doy_error": 0.14523462384415065
+  },
+  "calibration": {
+    "pit_mean": 0.48321488125332085,
+    "pit_std": 0.26940739094387167,
+    "z_std": 0.9631175398826599,
+    "coverage_50": 0.5748628499283107,
+    "coverage_90": 0.9100211664124966,
+    "ks_p_value": 0.0
+  },
+  "reliability": {
+    "mace": 0.04547824443525038,
+    "rmsce": 0.051498155992120084,
+    "coverage_at_50": 0.5701623413308592,
+    "coverage_at_90": 0.903589833384682,
+    "coverage_at_95": 0.9398047393768494
+  },
+  "eval_regime": "holdout_year_2024",
+  "eval_year": 2024,
+  "prediction_mode": "fold_ensemble",
+  "fold_ensemble": true,
+  "eval_days": 366,
+  "n_valid_points": 46718,
+  "cache": {
+    "path": "CLEAN_trained_models/baseline__tmax_sfc_flat_y2020-2023_e30f5_b8/tmax/pred_cache/holdout_2024.npz",
+    "schema_version": 1,
+    "served_from_cache": false
+  },
+  "sigma_decomposition": {
+    "mean_sigma_within_degC": 1.9779850244522095,
+    "mean_sigma_between_degC": 0.6261500120162964,
+    "mean_sigma_total_degC": 2.1153512001037598
+  }
+}

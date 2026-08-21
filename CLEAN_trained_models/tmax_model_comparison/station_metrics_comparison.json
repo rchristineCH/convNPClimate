@@ -1,0 +1,400 @@
+{
+  "station_baseline": {
+    "definition": "mae_era5_overall (bilinear ERA5 t2m_max at station points)",
+    "tolerance_degC": 0.001,
+    "cohort_consistent": true,
+    "per_regime": {
+      "cv": {
+        "value": 4.377745151519775,
+        "spread": 0.0,
+        "consistent": true,
+        "n": 7,
+        "unverified": false,
+        "per_model": {
+          "atm": 4.377745151519775,
+          "atm-clip60": 4.377745151519775,
+          "atm+wind": 4.377745151519775,
+          "atm+wind-clip60": 4.377745151519775,
+          "atm+sfcanchors": 4.377745151519775,
+          "sfc": 4.377745151519775,
+          "sfc-nogeo": 4.377745151519775
+        }
+      },
+      "2024": {
+        "value": 4.3475260734558105,
+        "spread": 0.0,
+        "consistent": true,
+        "n": 7,
+        "unverified": false,
+        "per_model": {
+          "atm": 4.3475260734558105,
+          "atm-clip60": 4.3475260734558105,
+          "atm+wind": 4.3475260734558105,
+          "atm+wind-clip60": 4.3475260734558105,
+          "atm+sfcanchors": 4.3475260734558105,
+          "sfc": 4.3475260734558105,
+          "sfc-nogeo": 4.3475260734558105
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "model": "atm",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.5952855348587036,
+      "st_crps": 1.1720671579019428,
+      "st_skill": 0.7322669279880194,
+      "st_skill_low": 0.6541758649518545,
+      "st_skill_med": 0.7277852219173275,
+      "st_bias": 0.17342430353164673,
+      "st_abs_bias": 0.4694137126706274,
+      "st_sys_share": 0.2942505917677013,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "atm",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.604797124862671,
+      "st_crps": 1.1828203763280287,
+      "st_skill": 0.7279325399449956,
+      "st_skill_low": 0.641097115147116,
+      "st_skill_med": 0.7190183917393216,
+      "st_bias": 0.3186190724372864,
+      "st_abs_bias": 0.5151223639425423,
+      "st_sys_share": 0.3209890870078817,
+      "st_mae_era5": 4.3475260734558105
+    },
+    {
+      "model": "atm-clip60",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.437174916267395,
+      "st_crps": 1.050573414115321,
+      "st_skill": 0.7600195128419925,
+      "st_skill_low": 0.702691687117683,
+      "st_skill_med": 0.7576901643588068,
+      "st_bias": -0.07686028629541397,
+      "st_abs_bias": 0.468324300167816,
+      "st_sys_share": 0.325864510204603,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "atm-clip60",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.3819661140441895,
+      "st_crps": 0.9915469267946081,
+      "st_skill": 0.7719284691934151,
+      "st_skill_low": 0.7187383812480866,
+      "st_skill_med": 0.7642854272397783,
+      "st_bias": 0.0726189985871315,
+      "st_abs_bias": 0.4178039215372077,
+      "st_sys_share": 0.30232573526317885,
+      "st_mae_era5": 4.3475260734558105
+    },
+    {
+      "model": "atm+wind",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.6712325811386108,
+      "st_crps": 1.2249348672135494,
+      "st_skill": 0.7201904576861214,
+      "st_skill_low": 0.6308568787772034,
+      "st_skill_med": 0.692252317552974,
+      "st_bias": 0.0245809443295002,
+      "st_abs_bias": 0.5140945072219308,
+      "st_sys_share": 0.30761398085697816,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "atm+wind",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.6554217338562012,
+      "st_crps": 1.212769302631547,
+      "st_skill": 0.7210438115515367,
+      "st_skill_low": 0.6293761086604565,
+      "st_skill_med": 0.69864082155676,
+      "st_bias": 0.21961870789527893,
+      "st_abs_bias": 0.49019935690531774,
+      "st_sys_share": 0.29611750702549317,
+      "st_mae_era5": 4.3475260734558105
+    },
+    {
+      "model": "atm+wind-clip60",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.3843330144882202,
+      "st_crps": 1.01630910509397,
+      "st_skill": 0.7678464437928396,
+      "st_skill_low": 0.7133127304717832,
+      "st_skill_med": 0.7606443315278086,
+      "st_bias": 0.14691297709941864,
+      "st_abs_bias": 0.3891390952215131,
+      "st_sys_share": 0.2811022284008559,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "atm+wind-clip60",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.353258728981018,
+      "st_crps": 0.9700309371539515,
+      "st_skill": 0.7768774883084526,
+      "st_skill_low": 0.7263745071868114,
+      "st_skill_med": 0.7644574081727661,
+      "st_bias": 0.30005839467048645,
+      "st_abs_bias": 0.4242396681968655,
+      "st_sys_share": 0.3134948691713307,
+      "st_mae_era5": 4.3475260734558105
+    },
+    {
+      "model": "atm+sfcanchors",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.582706332206726,
+      "st_crps": 1.169446900188884,
+      "st_skill": 0.7328654684745868,
+      "st_skill_low": 0.6604351978487444,
+      "st_skill_med": 0.7282421143618618,
+      "st_bias": 0.020603056997060776,
+      "st_abs_bias": 0.463893400239093,
+      "st_sys_share": 0.2931013737667294,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "atm+sfcanchors",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.5764038562774658,
+      "st_crps": 1.1667802240437328,
+      "st_skill": 0.7316220295566234,
+      "st_skill_low": 0.6495857106040808,
+      "st_skill_med": 0.729870841037653,
+      "st_bias": 0.1969384402036667,
+      "st_abs_bias": 0.48593977880331557,
+      "st_sys_share": 0.30825843064785324,
+      "st_mae_era5": 4.3475260734558105
+    },
+    {
+      "model": "sfc",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.730596661567688,
+      "st_crps": 1.252180719271762,
+      "st_skill": 0.7139667395126791,
+      "st_skill_low": 0.6048199087255164,
+      "st_skill_med": 0.7241698357289287,
+      "st_bias": -0.024655649438500404,
+      "st_abs_bias": 0.5327395358056363,
+      "st_sys_share": 0.30783575840429844,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "sfc",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.7832690477371216,
+      "st_crps": 1.2931040689029996,
+      "st_skill": 0.7025655402510047,
+      "st_skill_low": 0.5749656531097714,
+      "st_skill_med": 0.7105599811951759,
+      "st_bias": 0.17466451227664948,
+      "st_abs_bias": 0.5669078947311001,
+      "st_sys_share": 0.3179037372125522,
+      "st_mae_era5": 4.3475260734558105
+    },
+    {
+      "model": "sfc-nogeo",
+      "regime": "cv",
+      "regime_label": "CV 2020-2023",
+      "eval_regime": "cv_holdout",
+      "prediction_mode": "fold_holdout",
+      "n_stations_evaluated": 28,
+      "n_days_total": 40908,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "st_mae": 1.740659475326538,
+      "st_crps": 1.254674527638268,
+      "st_skill": 0.7133970836098817,
+      "st_skill_low": 0.6077348691220966,
+      "st_skill_med": 0.7054855930886275,
+      "st_bias": -0.016076285392045975,
+      "st_abs_bias": 0.6116923479629415,
+      "st_sys_share": 0.35141413736204286,
+      "st_mae_era5": 4.377745151519775
+    },
+    {
+      "model": "sfc-nogeo",
+      "regime": "2024",
+      "regime_label": "2024 holdout",
+      "eval_regime": "holdout_year_2024",
+      "prediction_mode": "fold_ensemble",
+      "n_stations_evaluated": 28,
+      "n_days_total": 10248,
+      "excluded_stations": [
+        "ANT"
+      ],
+      "years": [
+        2024
+      ],
+      "st_mae": 1.7726659774780273,
+      "st_crps": 1.2776254551219297,
+      "st_skill": 0.7061258670942584,
+      "st_skill_low": 0.5843492035797477,
+      "st_skill_med": 0.7024543635862359,
+      "st_bias": 0.11376650631427765,
+      "st_abs_bias": 0.5794114843010902,
+      "st_sys_share": 0.3268588056986456,
+      "st_mae_era5": 4.3475260734558105
+    }
+  ]
+}

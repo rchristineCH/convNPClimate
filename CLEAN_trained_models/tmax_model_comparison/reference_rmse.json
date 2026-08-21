@@ -1,0 +1,18 @@
+{
+  "cv": {
+    "regime": "cv",
+    "ref_mae_degC": 2.5598363876342773,
+    "ref_rmse_degC": 3.3589491844177246,
+    "ref_bias_degC": -1.0644521713256836,
+    "n_point_days": 68254998,
+    "source_bundle": "CLEAN_trained_models/lbclip_wind__tmax_atm_natg_av-ztquv_flat_y2020-2023_e60f5_b8/tmax/pred_cache/cv.npz"
+  },
+  "2024": {
+    "regime": "2024",
+    "ref_mae_degC": 2.5425736904144287,
+    "ref_rmse_degC": 3.3463215827941895,
+    "ref_bias_degC": -0.9126660823822021,
+    "n_point_days": 17098788,
+    "source_bundle": "CLEAN_trained_models/lbclip_wind__tmax_atm_natg_av-ztquv_flat_y2020-2023_e60f5_b8/tmax/pred_cache/holdout_2024.npz"
+  }
+}

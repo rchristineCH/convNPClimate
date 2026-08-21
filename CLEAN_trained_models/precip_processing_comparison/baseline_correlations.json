@@ -1,0 +1,22 @@
+{
+ "cv": {
+  "source": "datasets/ERA5_Land/tp_hourly/w0606/tp-2020.nc .. datasets/ERA5_Land/tp_hourly/w0606/tp-2024.nc (5 files, bilinear, mm/day)",
+  "n_obs": 92312625,
+  "baseline_mae_mm": 2.288139820098877,
+  "baseline_spearman_pooled": 0.8367376125741728,
+  "baseline_pearson_pooled": 0.8166569471359253,
+  "baseline_wetday_freq": 0.49315950012254556,
+  "baseline_R10_freq": 0.14219214327401047,
+  "baseline_P98_mm": 34.76237869262695
+ },
+ "2024": {
+  "source": "datasets/ERA5_Land/tp_hourly/w0606/tp-2020.nc .. datasets/ERA5_Land/tp_hourly/w0606/tp-2024.nc (5 files, bilinear, mm/day)",
+  "n_obs": 23125710,
+  "baseline_mae_mm": 2.569523811340332,
+  "baseline_spearman_pooled": 0.8331562577101863,
+  "baseline_pearson_pooled": 0.8023190498352051,
+  "baseline_wetday_freq": 0.5536956919376745,
+  "baseline_R10_freq": 0.16701662348961394,
+  "baseline_P98_mm": 33.29053497314453
+ }
+}

@@ -1,0 +1,137 @@
+{
+  "model_dir": "CLEAN_trained_models/lbclip_atm__tmax_atm_natg_flat_y2020-2023_e60f5_b8/tmax",
+  "variable": "tmax",
+  "encoder": "flat",
+  "grid_mode": "native coarse atmospheric",
+  "n_folds_evaluated": 5,
+  "n_target_points": 88800,
+  "holdout_days": 1461,
+  "overall": {
+    "mae_degC": 1.0877853631973267,
+    "rmse_degC": 1.425806999206543,
+    "bias_degC": -0.13959763944149017,
+    "crps_degC": 0.7870414679709711,
+    "skill_score": 0.6925422766185729
+  },
+  "correlations": {
+    "uncertainty_error": 0.5460266087363331,
+    "altitude_error": 0.3047166152884029,
+    "mtpi_error": -0.0015641220951718407,
+    "doy_error": 0.013369778667091164
+  },
+  "calibration": {
+    "pit_mean": 0.5291565164149332,
+    "pit_std": 0.27977408922502756,
+    "z_std": 1.037545084953308,
+    "coverage_50": 0.5349578209642611,
+    "coverage_90": 0.8976297970150112,
+    "ks_p_value": 0.0
+  },
+  "reliability": {
+    "mace": 0.021246964668394947,
+    "rmsce": 0.023841143075270514,
+    "coverage_at_50": 0.5302065352049384,
+    "coverage_at_90": 0.8902548206066903,
+    "coverage_at_95": 0.9312469102995212
+  },
+  "eval_regime": "cv_holdout",
+  "eval_year": null,
+  "prediction_mode": "fold_holdout",
+  "fold_ensemble": false,
+  "eval_days": 1461,
+  "n_valid_points": 46718,
+  "cache": {
+    "path": "CLEAN_trained_models/lbclip_atm__tmax_atm_natg_flat_y2020-2023_e60f5_b8/tmax/pred_cache/cv.npz",
+    "schema_version": 1,
+    "served_from_cache": false
+  },
+  "fold_blocks": {
+    "0": {
+      "start": 0,
+      "end": 292,
+      "first_date": "2020-01-01",
+      "last_date": "2020-10-18"
+    },
+    "1": {
+      "start": 292,
+      "end": 584,
+      "first_date": "2020-10-19",
+      "last_date": "2021-08-06"
+    },
+    "2": {
+      "start": 584,
+      "end": 876,
+      "first_date": "2021-08-07",
+      "last_date": "2022-05-25"
+    },
+    "3": {
+      "start": 876,
+      "end": 1168,
+      "first_date": "2022-05-26",
+      "last_date": "2023-03-13"
+    },
+    "4": {
+      "start": 1168,
+      "end": 1461,
+      "first_date": "2023-03-14",
+      "last_date": "2023-12-31"
+    }
+  },
+  "per_fold": {
+    "0": {
+      "n_days": 292,
+      "mae_degC": 1.0421334505081177,
+      "rmse_degC": 1.3799993991851807,
+      "bias_degC": -0.11536060273647308,
+      "crps_degC": 0.7593120958514392,
+      "skill_score": 0.7145660546756083,
+      "z_std": 0.9172087907791138,
+      "coverage_90": 0.9285477510941487,
+      "checkpoint_epoch": 51
+    },
+    "1": {
+      "n_days": 292,
+      "mae_degC": 1.1050539016723633,
+      "rmse_degC": 1.4344260692596436,
+      "bias_degC": -0.1626351773738861,
+      "crps_degC": 0.8018859301036926,
+      "skill_score": 0.68304156862978,
+      "z_std": 1.0542151927947998,
+      "coverage_90": 0.8900324857920475,
+      "checkpoint_epoch": 59
+    },
+    "2": {
+      "n_days": 292,
+      "mae_degC": 1.1571317911148071,
+      "rmse_degC": 1.5217194557189941,
+      "bias_degC": -0.17248551547527313,
+      "crps_degC": 0.8428110344991708,
+      "skill_score": 0.6793692742796877,
+      "z_std": 1.1073648929595947,
+      "coverage_90": 0.8882975058160094,
+      "checkpoint_epoch": 59
+    },
+    "3": {
+      "n_days": 292,
+      "mae_degC": 1.0786633491516113,
+      "rmse_degC": 1.390669822692871,
+      "bias_degC": -0.3092454969882965,
+      "crps_degC": 0.7693397040639051,
+      "skill_score": 0.6851403073270264,
+      "z_std": 1.0177741050720215,
+      "coverage_90": 0.8945105344981577,
+      "checkpoint_epoch": 45
+    },
+    "4": {
+      "n_days": 293,
+      "mae_degC": 1.0560529232025146,
+      "rmse_degC": 1.3638185262680054,
+      "bias_degC": 0.061051372438669205,
+      "crps_degC": 0.761944523775673,
+      "skill_score": 0.6996762545373659,
+      "z_std": 1.0683943033218384,
+      "coverage_90": 0.8867978037420661,
+      "checkpoint_epoch": 58
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "NLL": {
+    "best_CRPS": 1.7885186076164246,
+    "best_CRPS_epoch": 26,
+    "best_MAE": 2.512764036655426,
+    "best_MAE_epoch": 26,
+    "max_Pearson": 0.721095860004425,
+    "max_Spearman": 0.8097357148117039
+  },
+  "CRPS": {
+    "best_CRPS": 1.832260251045227,
+    "best_CRPS_epoch": 29,
+    "best_MAE": 2.5495426058769226,
+    "best_MAE_epoch": 29,
+    "max_Pearson": 0.6994201242923737,
+    "max_Spearman": 0.7744901330975434
+  },
+  "WIND": {
+    "best_CRPS": 1.7061232328414917,
+    "best_CRPS_epoch": 28,
+    "best_MAE": 2.350413775444031,
+    "best_MAE_epoch": 19,
+    "max_Pearson": 0.745623791217804,
+    "max_Spearman": 0.8217704332566103
+  },
+  "FT-CRPS": {
+    "best_CRPS": 1.761598269144694,
+    "best_CRPS_epoch": 4,
+    "best_MAE": 2.4396535952885947,
+    "best_MAE_epoch": 4,
+    "max_Pearson": 0.6892238974571228,
+    "max_Spearman": 0.806060249000398
+  },
+  "SFC-TP": {
+    "best_CRPS": 1.6196664474487306,
+    "best_CRPS_epoch": 28,
+    "best_MAE": 2.262009533500671,
+    "best_MAE_epoch": 28,
+    "max_Pearson": 0.7846084236145019,
+    "max_Spearman": 0.828748205316125
+  }
+}

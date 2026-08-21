@@ -1,0 +1,137 @@
+{
+  "model_dir": "CLEAN_trained_models/sfc_anchors__tmax_atm_natg_sfcanc_flat_y2020-2023_e30f5_b8/tmax",
+  "variable": "tmax",
+  "encoder": "flat",
+  "grid_mode": "native coarse atmospheric",
+  "n_folds_evaluated": 5,
+  "n_target_points": 88800,
+  "holdout_days": 1461,
+  "overall": {
+    "mae_degC": 1.2029579877853394,
+    "rmse_degC": 1.566197395324707,
+    "bias_degC": -0.10737760365009308,
+    "crps_degC": 0.8970730494726316,
+    "skill_score": 0.6495584429512391
+  },
+  "correlations": {
+    "uncertainty_error": -0.150961501602307,
+    "altitude_error": 0.19993660114582723,
+    "mtpi_error": 0.00637141619841152,
+    "doy_error": 0.03794945806493037
+  },
+  "calibration": {
+    "pit_mean": 0.5219532037124249,
+    "pit_std": 0.2627303373534802,
+    "z_std": 0.9748073220252991,
+    "coverage_50": 0.5989547754436971,
+    "coverage_90": 0.9128044073783432,
+    "ks_p_value": 0.0
+  },
+  "reliability": {
+    "mace": 0.06039175581421581,
+    "rmsce": 0.06837687420026191,
+    "coverage_at_50": 0.5943089178612239,
+    "coverage_at_90": 0.9069810243053557,
+    "coverage_at_95": 0.9395930683347175
+  },
+  "eval_regime": "cv_holdout",
+  "eval_year": null,
+  "prediction_mode": "fold_holdout",
+  "fold_ensemble": false,
+  "eval_days": 1461,
+  "n_valid_points": 46718,
+  "cache": {
+    "path": "CLEAN_trained_models/sfc_anchors__tmax_atm_natg_sfcanc_flat_y2020-2023_e30f5_b8/tmax/pred_cache/cv.npz",
+    "schema_version": 1,
+    "served_from_cache": true
+  },
+  "fold_blocks": {
+    "0": {
+      "start": 0,
+      "end": 292,
+      "first_date": "2020-01-01",
+      "last_date": "2020-10-18"
+    },
+    "1": {
+      "start": 292,
+      "end": 584,
+      "first_date": "2020-10-19",
+      "last_date": "2021-08-06"
+    },
+    "2": {
+      "start": 584,
+      "end": 876,
+      "first_date": "2021-08-07",
+      "last_date": "2022-05-25"
+    },
+    "3": {
+      "start": 876,
+      "end": 1168,
+      "first_date": "2022-05-26",
+      "last_date": "2023-03-13"
+    },
+    "4": {
+      "start": 1168,
+      "end": 1461,
+      "first_date": "2023-03-14",
+      "last_date": "2023-12-31"
+    }
+  },
+  "per_fold": {
+    "0": {
+      "n_days": 292,
+      "mae_degC": 1.298662781715393,
+      "rmse_degC": 1.6705307960510254,
+      "bias_degC": -0.42369726300239563,
+      "crps_degC": 0.9614944674731152,
+      "skill_score": 0.6385634302971495,
+      "z_std": 0.9405630230903625,
+      "coverage_90": 0.9105571200446632,
+      "checkpoint_epoch": 9
+    },
+    "1": {
+      "n_days": 292,
+      "mae_degC": 1.1502875089645386,
+      "rmse_degC": 1.4882887601852417,
+      "bias_degC": -0.17175234854221344,
+      "crps_degC": 0.8468242578560328,
+      "skill_score": 0.6652789650747573,
+      "z_std": 0.9616585969924927,
+      "coverage_90": 0.9115167542708891,
+      "checkpoint_epoch": 28
+    },
+    "2": {
+      "n_days": 292,
+      "mae_degC": 1.2832057476043701,
+      "rmse_degC": 1.6691147089004517,
+      "bias_degC": -0.0021192491985857487,
+      "crps_degC": 0.9554566995514455,
+      "skill_score": 0.6365154673686041,
+      "z_std": 0.9215032458305359,
+      "coverage_90": 0.930378980381854,
+      "checkpoint_epoch": 15
+    },
+    "3": {
+      "n_days": 292,
+      "mae_degC": 1.0629574060440063,
+      "rmse_degC": 1.3814480304718018,
+      "bias_degC": 0.006563969422131777,
+      "crps_degC": 0.8005367297616047,
+      "skill_score": 0.6723726237256187,
+      "z_std": 1.0532135963439941,
+      "coverage_90": 0.8961710367128448,
+      "checkpoint_epoch": 23
+    },
+    "4": {
+      "n_days": 293,
+      "mae_degC": 1.2196189165115356,
+      "rmse_degC": 1.5640760660171509,
+      "bias_degC": 0.053565751761198044,
+      "crps_degC": 0.9209712495699416,
+      "skill_score": 0.6369951794342459,
+      "z_std": 0.9614320397377014,
+      "coverage_90": 0.9153892931329901,
+      "checkpoint_epoch": 11
+    }
+  }
+}

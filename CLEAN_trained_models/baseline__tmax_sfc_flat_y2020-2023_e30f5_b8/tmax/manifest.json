@@ -1,0 +1,156 @@
+{
+  "grid_mode": "fine surface",
+  "in_channels": 6,
+  "channel_names": [
+    "data",
+    "lat",
+    "lon",
+    "cos_time",
+    "sin_time",
+    "elevation"
+  ],
+  "channel_groups": {
+    "scaffold": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "seasonal_features": true,
+  "normalization": {
+    "surface_data": {
+      "mean": 285.5404968261719,
+      "std": 9.035901069641113
+    },
+    "surface_elevation": {
+      "mean": 578.2594828509991,
+      "std": 348.82787079758526
+    },
+    "lat_bounds": [
+      45.4,
+      48.2
+    ],
+    "lon_bounds": [
+      5.0,
+      11.0
+    ],
+    "per_channel": {},
+    "seasonal": "deterministic: cos/sin(2*pi*(doy-1)/365)"
+  },
+  "dists_grid": {
+    "lat_coords": [
+      48.2,
+      48.1,
+      48.0,
+      47.9,
+      47.8,
+      47.7,
+      47.6,
+      47.5,
+      47.4,
+      47.3,
+      47.2,
+      47.1,
+      47.0,
+      46.9,
+      46.8,
+      46.7,
+      46.6,
+      46.5,
+      46.4,
+      46.3,
+      46.2,
+      46.1,
+      46.0,
+      45.9,
+      45.8,
+      45.7,
+      45.6,
+      45.5,
+      45.4
+    ],
+    "lon_coords": [
+      5.0,
+      5.1,
+      5.2,
+      5.3,
+      5.4,
+      5.5,
+      5.6,
+      5.7,
+      5.8,
+      5.9,
+      6.0,
+      6.1,
+      6.2,
+      6.3,
+      6.4,
+      6.5,
+      6.6,
+      6.7,
+      6.8,
+      6.9,
+      7.0,
+      7.1,
+      7.2,
+      7.3,
+      7.4,
+      7.5,
+      7.6,
+      7.7,
+      7.8,
+      7.9,
+      8.0,
+      8.1,
+      8.2,
+      8.3,
+      8.4,
+      8.5,
+      8.6,
+      8.7,
+      8.8,
+      8.9,
+      9.0,
+      9.1,
+      9.2,
+      9.3,
+      9.4,
+      9.5,
+      9.6,
+      9.7,
+      9.8,
+      9.9,
+      10.0,
+      10.1,
+      10.2,
+      10.3,
+      10.4,
+      10.5,
+      10.6,
+      10.7,
+      10.8,
+      10.9,
+      11.0
+    ],
+    "lat_bounds": [
+      45.4,
+      48.2
+    ],
+    "lon_bounds": [
+      5.0,
+      11.0
+    ]
+  },
+  "variable": "tmax",
+  "distribution": "gaussian",
+  "encoder": "flat",
+  "target": {
+    "data_var": "TmaxD",
+    "meteoswiss_glob": "datasets/MeteoSwiss/TmaxD_v2.0_swiss.lv95/*.nc",
+    "convert_to_kelvin": true,
+    "normalize_targets": true
+  }
+}

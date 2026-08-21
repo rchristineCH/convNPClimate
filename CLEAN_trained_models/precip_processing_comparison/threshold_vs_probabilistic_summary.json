@@ -1,0 +1,412 @@
+{
+  "NLL / CV": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.35617698012595783,
+      "SDII_obs_mm": 9.894001960754395
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.5706839015790094,
+      "probabilistic": 0.3623793160217838,
+      "delta": -0.20830458555722559
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.602248133434097,
+      "probabilistic": 1.0174136349115896,
+      "delta": -0.5848344985225074
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.804863929748535,
+      "probabilistic": 10.303563217139565,
+      "delta": 3.4986992873910303
+    },
+    "mae_mm": {
+      "threshold": 2.851752519607544,
+      "probabilistic": 2.823519229888916,
+      "delta": -0.02823328971862793
+    },
+    "bias_mm": {
+      "threshold": 0.3023502826690674,
+      "probabilistic": 0.21896754205226898,
+      "delta": -0.0833827406167984
+    },
+    "spearman_pooled": {
+      "threshold": 0.7971208087809527,
+      "probabilistic": 0.7968770991605596,
+      "delta": -0.00024370962039310662
+    },
+    "pearson_pooled": {
+      "threshold": 0.6625728607177734,
+      "probabilistic": 0.6619641184806824,
+      "delta": -0.0006087422370910645
+    }
+  },
+  "NLL / 2024": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.4038128991499072,
+      "SDII_obs_mm": 10.062204360961914
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.6637628855503247,
+      "probabilistic": 0.423572275082277,
+      "delta": -0.24019061046804768
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.6437386892485484,
+      "probabilistic": 1.0489320078035311,
+      "delta": -0.5948066814450172
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.983842849731445,
+      "probabilistic": 10.488236040614407,
+      "delta": 3.5043931908829613
+    },
+    "mae_mm": {
+      "threshold": 3.286741256713867,
+      "probabilistic": 3.238414764404297,
+      "delta": -0.04832649230957031
+    },
+    "bias_mm": {
+      "threshold": 0.5071690082550049,
+      "probabilistic": 0.3854450285434723,
+      "delta": -0.12172397971153259
+    },
+    "spearman_pooled": {
+      "threshold": 0.7713721254177356,
+      "probabilistic": 0.7746217498983912,
+      "delta": 0.0032496244806555774
+    },
+    "pearson_pooled": {
+      "threshold": 0.6624314785003662,
+      "probabilistic": 0.6620209217071533,
+      "delta": -0.0004105567932128906
+    }
+  },
+  "CRPS / CV": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.35617698012595783,
+      "SDII_obs_mm": 9.894001960754395
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.775863886440235,
+      "probabilistic": 0.3712273289333101,
+      "delta": -0.40463655750692484
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 2.178310024881057,
+      "probabilistic": 1.0422552541212233,
+      "delta": -1.1360547707598336
+    },
+    "SDII_pred_mm": {
+      "threshold": 4.571715831756592,
+      "probabilistic": 8.693271060001,
+      "delta": 4.121555228244409
+    },
+    "mae_mm": {
+      "threshold": 2.814051628112793,
+      "probabilistic": 2.7161617279052734,
+      "delta": -0.09788990020751953
+    },
+    "bias_mm": {
+      "threshold": -0.034046512097120285,
+      "probabilistic": -0.30413949489593506,
+      "delta": -0.27009299397468567
+    },
+    "spearman_pooled": {
+      "threshold": 0.726001632373472,
+      "probabilistic": 0.7475544977221371,
+      "delta": 0.021552865348665073
+    },
+    "pearson_pooled": {
+      "threshold": 0.6844046115875244,
+      "probabilistic": 0.6850170493125916,
+      "delta": 0.0006124377250671387
+    }
+  },
+  "CRPS / 2024": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.4038128991499072,
+      "SDII_obs_mm": 10.062204360961914
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.9962887193517518,
+      "probabilistic": 0.4521262685220403,
+      "delta": -0.5441624508297115
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 2.4672038001983196,
+      "probabilistic": 1.1196429571067212,
+      "delta": -1.3475608430915984
+    },
+    "SDII_pred_mm": {
+      "threshold": 4.506194114685059,
+      "probabilistic": 8.720772143847851,
+      "delta": 4.214578029162793
+    },
+    "mae_mm": {
+      "threshold": 3.372612476348877,
+      "probabilistic": 3.142402410507202,
+      "delta": -0.2302100658416748
+    },
+    "bias_mm": {
+      "threshold": 0.36102399230003357,
+      "probabilistic": -0.12653577327728271,
+      "delta": -0.4875597655773163
+    },
+    "spearman_pooled": {
+      "threshold": 0.7354733436458881,
+      "probabilistic": 0.7357012348518344,
+      "delta": 0.00022789120594624013
+    },
+    "pearson_pooled": {
+      "threshold": 0.6780893206596375,
+      "probabilistic": 0.6784803867340088,
+      "delta": 0.0003910660743713379
+    }
+  },
+  "WIND / CV": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.35617698012595783,
+      "SDII_obs_mm": 9.894001960754395
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.5961046173261783,
+      "probabilistic": 0.3742104140172757,
+      "delta": -0.22189420330890253
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.6736191572947046,
+      "probabilistic": 1.0506305429535074,
+      "delta": -0.6229886143411971
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.0865302085876465,
+      "probabilistic": 9.297519655516208,
+      "delta": 3.2109894469285614
+    },
+    "mae_mm": {
+      "threshold": 2.5335752964019775,
+      "probabilistic": 2.4987545013427734,
+      "delta": -0.0348207950592041
+    },
+    "bias_mm": {
+      "threshold": 0.04713296890258789,
+      "probabilistic": -0.03391468897461891,
+      "delta": -0.0810476541519165
+    },
+    "spearman_pooled": {
+      "threshold": 0.8157892957422113,
+      "probabilistic": 0.812644170111964,
+      "delta": -0.0031451256302472697
+    },
+    "pearson_pooled": {
+      "threshold": 0.7336329221725464,
+      "probabilistic": 0.7336162328720093,
+      "delta": -1.6689300537109375e-05
+    }
+  },
+  "WIND / 2024": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.4038128991499072,
+      "SDII_obs_mm": 10.062204360961914
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.6808079405994454,
+      "probabilistic": 0.42510799512523384,
+      "delta": -0.25569994547421154
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.6859489680311315,
+      "probabilistic": 1.052735056309881,
+      "delta": -0.6332139117212505
+    },
+    "SDII_pred_mm": {
+      "threshold": 5.891414642333984,
+      "probabilistic": 8.992851890161507,
+      "delta": 3.1014372478275227
+    },
+    "mae_mm": {
+      "threshold": 2.8614771366119385,
+      "probabilistic": 2.813387632369995,
+      "delta": -0.04808950424194336
+    },
+    "bias_mm": {
+      "threshold": -0.11752497404813766,
+      "probabilistic": -0.23099029064178467,
+      "delta": -0.113465316593647
+    },
+    "spearman_pooled": {
+      "threshold": 0.7944602345935647,
+      "probabilistic": 0.7960844114187394,
+      "delta": 0.0016241768251746835
+    },
+    "pearson_pooled": {
+      "threshold": 0.7181447744369507,
+      "probabilistic": 0.7184383869171143,
+      "delta": 0.0002936124801635742
+    }
+  },
+  "FT-CRPS / CV": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.35617698012595783,
+      "SDII_obs_mm": 9.894001960754395
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.5476546463715012,
+      "probabilistic": 0.3623964238871961,
+      "delta": -0.18525822248430507
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.537591357470181,
+      "probabilistic": 1.0174616668349505,
+      "delta": -0.5201296906352304
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.311947822570801,
+      "probabilistic": 9.137677706638318,
+      "delta": 2.825729884067517
+    },
+    "mae_mm": {
+      "threshold": 2.6543798446655273,
+      "probabilistic": 2.6198740005493164,
+      "delta": -0.03450584411621094
+    },
+    "bias_mm": {
+      "threshold": -0.124308280646801,
+      "probabilistic": -0.21106967329978943,
+      "delta": -0.08676139265298843
+    },
+    "spearman_pooled": {
+      "threshold": 0.7961810590979997,
+      "probabilistic": 0.7988478678201458,
+      "delta": 0.0026668087221460857
+    },
+    "pearson_pooled": {
+      "threshold": 0.6757409572601318,
+      "probabilistic": 0.675834059715271,
+      "delta": 9.310245513916016e-05
+    }
+  },
+  "FT-CRPS / 2024": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.4038128991499072,
+      "SDII_obs_mm": 10.062204360961914
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.6422708751428605,
+      "probabilistic": 0.424676858105681,
+      "delta": -0.2175940170371795
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.5905159951426682,
+      "probabilistic": 1.0516673910112726,
+      "delta": -0.5388486041313956
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.734380722045898,
+      "probabilistic": 9.750467013363478,
+      "delta": 3.0160862913175794
+    },
+    "mae_mm": {
+      "threshold": 3.1136739253997803,
+      "probabilistic": 3.064819812774658,
+      "delta": -0.04885411262512207
+    },
+    "bias_mm": {
+      "threshold": 0.19684989750385284,
+      "probabilistic": 0.07746778428554535,
+      "delta": -0.1193821132183075
+    },
+    "spearman_pooled": {
+      "threshold": 0.7730646010041035,
+      "probabilistic": 0.7779268397836266,
+      "delta": 0.004862238779523187
+    },
+    "pearson_pooled": {
+      "threshold": 0.6738288402557373,
+      "probabilistic": 0.6737493276596069,
+      "delta": -7.95125961303711e-05
+    }
+  },
+  "SFC-TP / CV": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.35573685867361365,
+      "SDII_obs_mm": 9.89602279663086
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.58295254692061,
+      "probabilistic": 0.37841921274999823,
+      "delta": -0.2045333341706118
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.638718431073417,
+      "probabilistic": 1.063761607838325,
+      "delta": -0.5749568232350921
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.366416931152344,
+      "probabilistic": 9.49920011631886,
+      "delta": 3.1327831851665167
+    },
+    "mae_mm": {
+      "threshold": 2.3754682540893555,
+      "probabilistic": 2.360116720199585,
+      "delta": -0.015351533889770508
+    },
+    "bias_mm": {
+      "threshold": 0.1338406652212143,
+      "probabilistic": 0.08656240254640579,
+      "delta": -0.0472782626748085
+    },
+    "spearman_pooled": {
+      "threshold": 0.8296445584382385,
+      "probabilistic": 0.8236526933550329,
+      "delta": -0.005991865083205594
+    },
+    "pearson_pooled": {
+      "threshold": 0.7732341289520264,
+      "probabilistic": 0.773352861404419,
+      "delta": 0.00011873245239257812
+    }
+  },
+  "SFC-TP / 2024": {
+    "_obs_reference": {
+      "wetday_freq_obs": 0.4038128991499072,
+      "SDII_obs_mm": 10.062204360961914
+    },
+    "wetday_freq_pred": {
+      "threshold": 0.6525025177605358,
+      "probabilistic": 0.42473497500499097,
+      "delta": -0.22776754275554484
+    },
+    "R01_rel_wetday_freq": {
+      "threshold": 1.6158535775706058,
+      "probabilistic": 1.0518113113749665,
+      "delta": -0.5640422661956392
+    },
+    "SDII_pred_mm": {
+      "threshold": 6.156773567199707,
+      "probabilistic": 9.126930746207782,
+      "delta": 2.9701571790080745
+    },
+    "mae_mm": {
+      "threshold": 2.709800958633423,
+      "probabilistic": 2.688769817352295,
+      "delta": -0.02103114128112793
+    },
+    "bias_mm": {
+      "threshold": -0.11113621294498444,
+      "probabilistic": -0.17785856127738953,
+      "delta": -0.06672234833240509
+    },
+    "spearman_pooled": {
+      "threshold": 0.8080251008951436,
+      "probabilistic": 0.8067508725997449,
+      "delta": -0.0012742282953986939
+    },
+    "pearson_pooled": {
+      "threshold": 0.7438766956329346,
+      "probabilistic": 0.7439901232719421,
+      "delta": 0.00011342763900756836
+    }
+  }
+}

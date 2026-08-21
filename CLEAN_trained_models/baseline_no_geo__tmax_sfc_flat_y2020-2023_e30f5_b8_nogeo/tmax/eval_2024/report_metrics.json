@@ -1,0 +1,53 @@
+{
+  "model_dir": "CLEAN_trained_models/baseline_no_geo__tmax_sfc_flat_y2020-2023_e30f5_b8_nogeo/tmax",
+  "variable": "tmax",
+  "encoder": "flat",
+  "grid_mode": "fine surface",
+  "n_folds_evaluated": 5,
+  "n_target_points": 88800,
+  "holdout_days": 366,
+  "overall": {
+    "mae_degC": 1.493497610092163,
+    "rmse_degC": 1.9558894634246826,
+    "bias_degC": 0.1150929406285286,
+    "crps_degC": 1.0903531355832594,
+    "skill_score": 0.5711616384241212
+  },
+  "correlations": {
+    "uncertainty_error": 0.045548559441917526,
+    "altitude_error": 0.33500461226273964,
+    "mtpi_error": 0.021605129022178034,
+    "doy_error": 0.1393114398850226
+  },
+  "calibration": {
+    "pit_mean": 0.4842952902125135,
+    "pit_std": 0.26287746924454275,
+    "z_std": 0.9109761118888855,
+    "coverage_50": 0.5902465718622864,
+    "coverage_90": 0.9232472500390086,
+    "ks_p_value": 0.0
+  },
+  "reliability": {
+    "mace": 0.05729696467375346,
+    "rmsce": 0.06395483079140152,
+    "coverage_at_50": 0.5854820821218439,
+    "coverage_at_90": 0.9170783332713406,
+    "coverage_at_95": 0.9510247159038406
+  },
+  "eval_regime": "holdout_year_2024",
+  "eval_year": 2024,
+  "prediction_mode": "fold_ensemble",
+  "fold_ensemble": true,
+  "eval_days": 366,
+  "n_valid_points": 46718,
+  "cache": {
+    "path": "CLEAN_trained_models/baseline_no_geo__tmax_sfc_flat_y2020-2023_e30f5_b8_nogeo/tmax/pred_cache/holdout_2024.npz",
+    "schema_version": 1,
+    "served_from_cache": false
+  },
+  "sigma_decomposition": {
+    "mean_sigma_within_degC": 2.1060378551483154,
+    "mean_sigma_between_degC": 0.5872237682342529,
+    "mean_sigma_total_degC": 2.2194530963897705
+  }
+}

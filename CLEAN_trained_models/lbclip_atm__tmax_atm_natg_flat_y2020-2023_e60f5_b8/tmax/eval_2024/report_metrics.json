@@ -1,0 +1,53 @@
+{
+  "model_dir": "CLEAN_trained_models/lbclip_atm__tmax_atm_natg_flat_y2020-2023_e60f5_b8/tmax",
+  "variable": "tmax",
+  "encoder": "flat",
+  "grid_mode": "native coarse atmospheric",
+  "n_folds_evaluated": 5,
+  "n_target_points": 88800,
+  "holdout_days": 366,
+  "overall": {
+    "mae_degC": 1.0468748807907104,
+    "rmse_degC": 1.3833751678466797,
+    "bias_degC": -0.020961133763194084,
+    "crps_degC": 0.7570020114476927,
+    "skill_score": 0.7022693917184738
+  },
+  "correlations": {
+    "uncertainty_error": 0.6717037163332527,
+    "altitude_error": 0.3661064895780586,
+    "mtpi_error": 0.011522027987962143,
+    "doy_error": 0.17767763797180572
+  },
+  "calibration": {
+    "pit_mean": 0.5065743397874183,
+    "pit_std": 0.2613894356599932,
+    "z_std": 0.8869834542274475,
+    "coverage_50": 0.5896737827265885,
+    "coverage_90": 0.9323080676829258,
+    "ks_p_value": 0.0
+  },
+  "reliability": {
+    "mace": 0.05829418377489677,
+    "rmsce": 0.06465544105718937,
+    "coverage_at_50": 0.5847202737410394,
+    "coverage_at_90": 0.9263698105386183,
+    "coverage_at_95": 0.9585382893805104
+  },
+  "eval_regime": "holdout_year_2024",
+  "eval_year": 2024,
+  "prediction_mode": "fold_ensemble",
+  "fold_ensemble": true,
+  "eval_days": 366,
+  "n_valid_points": 46718,
+  "cache": {
+    "path": "CLEAN_trained_models/lbclip_atm__tmax_atm_natg_flat_y2020-2023_e60f5_b8/tmax/pred_cache/holdout_2024.npz",
+    "schema_version": 1,
+    "served_from_cache": false
+  },
+  "sigma_decomposition": {
+    "mean_sigma_within_degC": 1.4201055765151978,
+    "mean_sigma_between_degC": 0.5302173495292664,
+    "mean_sigma_total_degC": 1.5365972518920898
+  }
+}

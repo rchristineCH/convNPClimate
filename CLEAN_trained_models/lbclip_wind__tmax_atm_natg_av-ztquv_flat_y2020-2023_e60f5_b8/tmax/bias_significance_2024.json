@@ -1,0 +1,22 @@
+{
+  "n_days": 366,
+  "mean_bias_degC": 0.23108471287516216,
+  "sd_of_daily_means_degC": 0.5287960751547861,
+  "lag1_autocorr": 0.2455373143690649,
+  "n_eff": 221.6981697419474,
+  "n_eff_fraction": 0.605732704212971,
+  "se_naive_degC": 0.02764061363516927,
+  "se_adjusted_degC": 0.03551461975620321,
+  "interval_inflation": 1.284870886911687,
+  "dof": 220.6981697419474,
+  "t_stat": 6.50674889556714,
+  "p_value": 5.08334720978402e-10,
+  "ci95_low_degC": 0.16109352627765108,
+  "ci95_high_degC": 0.3010758994726732,
+  "significant_at_5pct": true,
+  "regime": "holdout_year_2024",
+  "eval_year": 2024,
+  "model_dir": "CLEAN_trained_models/lbclip_wind__tmax_atm_natg_av-ztquv_flat_y2020-2023_e60f5_b8/tmax",
+  "first_day": "2024-01-01T00:00:00.000000000",
+  "last_day": "2024-12-31T00:00:00.000000000"
+}
