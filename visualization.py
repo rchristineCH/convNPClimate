@@ -1,5 +1,7 @@
 """Visualization utilities for convCNP prediction analysis."""
 
+import os
+import pickle
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -12,19 +14,48 @@ from scipy.ndimage import zoom
 import datasets as ds
 
 
-def _save_fig(fig, save_path: str | Path | None):
-    """Save figure to disk if save_path is provided."""
-    if save_path is not None:
-        save_path = Path(save_path)
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-        fig.savefig(save_path, dpi=150, bbox_inches='tight')
-        print(f"  Saved plot: {save_path}")
+def _fig_pickles_enabled() -> bool:
+    """Whether to dump a pickled Figure next to every PNG (env: CONVCNP_FIG_PICKLE)."""
+    return os.environ.get('CONVCNP_FIG_PICKLE', '1').lower() not in ('0', 'false', 'no')
+
+
+def save_fig(fig, save_path: str | Path | None, dpi: int = 150,
+             bbox_inches: str | None = 'tight'):
+    """Save figure to disk if save_path is provided.
+
+    Alongside ``<name>.png`` this also writes ``<name>.fig.pkl``, a pickle of the
+    live matplotlib Figure, so the plot can be reopened and *edited* later
+    (restyled, relabelled, re-cropped) without re-running inference. Reload it
+    with ``scripts/load_figure.py``. Disable with ``CONVCNP_FIG_PICKLE=0``.
+
+    Pickling is best-effort: a figure holding a non-picklable artist warns and
+    still gets its PNG, since losing an evaluation to a plotting detail would be
+    far more expensive than losing one editable figure.
+    """
+    if save_path is None:
+        return
+    save_path = Path(save_path)
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(save_path, dpi=dpi, bbox_inches=bbox_inches)
+    print(f"  Saved plot: {save_path}")
+    if _fig_pickles_enabled():
+        pkl_path = save_path.with_suffix('.fig.pkl')
+        try:
+            with open(pkl_path, 'wb') as fh:
+                pickle.dump(fig, fh)
+        except Exception as exc:  # noqa: BLE001 - never fail a run over a figure dump
+            print(f"  WARNING: could not pickle figure {pkl_path}: {exc}")
+
+
+# Backwards-compatible alias: this module's plot_* helpers (and older callers)
+# use the private name.
+_save_fig = save_fig
 
 
 def plot_prediction_comparison(
     truth: np.ndarray,
     predictions: np.ndarray,
-    era5_input: np.ndarray,
+    era5_input: np.ndarray | None,
     grid_shape: tuple[int, int],
     era5_shape: tuple[int, int],
     metadata: ds.Era5Metadata,
@@ -40,7 +71,10 @@ def plot_prediction_comparison(
     Args:
         truth: Ground truth values (n_points,)
         predictions: Model predictions (n_points,)
-        era5_input: ERA5 temperature input (lat, lon) - normalized
+        era5_input: ERA5 temperature input (lat, lon) - normalized. Pass None for
+            atmospheric-only models (USE_SURFACE=False), which have no surface
+            temperature channel; the Input panel is then omitted rather than
+            showing a non-temperature channel (e.g. the lat coordinate).
         grid_shape: (N, E) shape for reshaping MeteoSwiss data
         era5_shape: (lat, lon) shape of ERA5 grid
         metadata: Era5Metadata for denormalization
@@ -58,27 +92,31 @@ def plot_prediction_comparison(
     valid_mask = ~np.isnan(truth_grid)
     pred_grid = np.where(valid_mask, pred_grid, np.nan)
 
-    # Upsample ERA5 to MeteoSwiss resolution and apply same mask
-    era5_lat, era5_lon = era5_shape
-    zoom_factors = (N / era5_lat, E / era5_lon)
-    era5_upsampled = zoom(era5_input, zoom_factors, order=0)  # nearest neighbour interpolation
-    # ERA5 NetCDF files store latitude in decreasing order (north to south), so the first row
-    # era5_data[day_idx, 0][0, :] is the northern edge. When we use origin='lower' with imshow,
-    # row 0 is placed at the bottom, putting north at the bottom instead of the top. We could
-    # go the other way, but then we would need to flip the mask too.
-    era5_upsampled = np.flipud(era5_upsampled)
-    era5_upsampled = np.where(valid_mask, era5_upsampled, np.nan)
+    # Upsample ERA5 to MeteoSwiss resolution and apply same mask. Skipped for
+    # atmospheric-only models, which pass era5_input=None (no surface temperature).
+    show_input = era5_input is not None
+    era5_upsampled = None
+    if show_input:
+        era5_lat, era5_lon = era5_shape
+        zoom_factors = (N / era5_lat, E / era5_lon)
+        era5_upsampled = zoom(era5_input, zoom_factors, order=0)  # nearest neighbour interpolation
+        # ERA5 NetCDF files store latitude in decreasing order (north to south), so the first row
+        # era5_data[day_idx, 0][0, :] is the northern edge. When we use origin='lower' with imshow,
+        # row 0 is placed at the bottom, putting north at the bottom instead of the top. We could
+        # go the other way, but then we would need to flip the mask too.
+        era5_upsampled = np.flipud(era5_upsampled)
+        era5_upsampled = np.where(valid_mask, era5_upsampled, np.nan)
 
     # Denormalize if requested
     if denormalize:
         # Convert from normalized to Kelvin
         truth_grid = metadata.denormalize(truth_grid)
         pred_grid = metadata.denormalize(pred_grid)
-        era5_upsampled = metadata.denormalize(era5_upsampled)
         # Convert Kelvin to Celsius
         truth_grid = truth_grid - ds.KELVIN_OFFSET
         pred_grid = pred_grid - ds.KELVIN_OFFSET
-        era5_upsampled = era5_upsampled - ds.KELVIN_OFFSET
+        if show_input:
+            era5_upsampled = metadata.denormalize(era5_upsampled) - ds.KELVIN_OFFSET
         unit = '°C'
     else:
         unit = 'normalized'
@@ -86,40 +124,49 @@ def plot_prediction_comparison(
     # Calculate residuals
     residuals_grid = pred_grid - truth_grid
 
-    # Create figure with 4 subplots
-    fig, axes = plt.subplots(1, 4, figsize=(24, 6))
+    # Create figure: 4 panels (Input | Truth | Pred | Bias) for surface models,
+    # or 3 panels (Truth | Pred | Bias) when there is no surface input to show.
+    n_panels = 4 if show_input else 3
+    fig, axes = plt.subplots(1, n_panels, figsize=(6 * n_panels, 6))
 
     # Use fixed colormap ranges
     vmin, vmax = temp_range
     res_min, res_max = residual_range
 
-    # ERA5 Input
-    im0 = axes[0].imshow(era5_upsampled, cmap='RdYlBu_r', vmin=vmin, vmax=vmax, origin='lower')
-    axes[0].set_title(f'Input ({unit})')
-    axes[0].set_xlabel('E (grid index)')
-    axes[0].set_ylabel('N (grid index)')
-    plt.colorbar(im0, ax=axes[0], shrink=0.8)
+    ax_iter = iter(axes)
+
+    # ERA5 Input (only when a surface temperature field is available)
+    if show_input:
+        ax = next(ax_iter)
+        im0 = ax.imshow(era5_upsampled, cmap='RdYlBu_r', vmin=vmin, vmax=vmax, origin='lower')
+        ax.set_title(f'Input ({unit})')
+        ax.set_xlabel('E (grid index)')
+        ax.set_ylabel('N (grid index)')
+        plt.colorbar(im0, ax=ax, shrink=0.8)
 
     # Ground Truth
-    im1 = axes[1].imshow(truth_grid, cmap='RdYlBu_r', vmin=vmin, vmax=vmax, origin='lower')
-    axes[1].set_title(f'Ground Truth ({unit})')
-    axes[1].set_xlabel('E (grid index)')
-    axes[1].set_ylabel('N (grid index)')
-    plt.colorbar(im1, ax=axes[1], shrink=0.8)
+    ax = next(ax_iter)
+    im1 = ax.imshow(truth_grid, cmap='RdYlBu_r', vmin=vmin, vmax=vmax, origin='lower')
+    ax.set_title(f'Ground Truth ({unit})')
+    ax.set_xlabel('E (grid index)')
+    ax.set_ylabel('N (grid index)')
+    plt.colorbar(im1, ax=ax, shrink=0.8)
 
     # Predictions
-    im2 = axes[2].imshow(pred_grid, cmap='RdYlBu_r', vmin=vmin, vmax=vmax, origin='lower')
-    axes[2].set_title(f'Predictions ({unit})')
-    axes[2].set_xlabel('E (grid index)')
-    axes[2].set_ylabel('N (grid index)')
-    plt.colorbar(im2, ax=axes[2], shrink=0.8)
+    ax = next(ax_iter)
+    im2 = ax.imshow(pred_grid, cmap='RdYlBu_r', vmin=vmin, vmax=vmax, origin='lower')
+    ax.set_title(f'Predictions ({unit})')
+    ax.set_xlabel('E (grid index)')
+    ax.set_ylabel('N (grid index)')
+    plt.colorbar(im2, ax=ax, shrink=0.8)
 
     # Residuals (Bias)
-    im3 = axes[3].imshow(residuals_grid, cmap='RdBu_r', vmin=res_min, vmax=res_max, origin='lower')
-    axes[3].set_title(f'Bias (Pred - Truth, {unit})')
-    axes[3].set_xlabel('E (grid index)')
-    axes[3].set_ylabel('N (grid index)')
-    plt.colorbar(im3, ax=axes[3], shrink=0.8)
+    ax_bias = next(ax_iter)
+    im3 = ax_bias.imshow(residuals_grid, cmap='RdBu_r', vmin=res_min, vmax=res_max, origin='lower')
+    ax_bias.set_title(f'Bias (Pred - Truth, {unit})')
+    ax_bias.set_xlabel('E (grid index)')
+    ax_bias.set_ylabel('N (grid index)')
+    plt.colorbar(im3, ax=ax_bias, shrink=0.8)
 
     # Add statistics to residuals plot
     valid_residuals = residuals_grid[~np.isnan(residuals_grid)]
@@ -127,7 +174,7 @@ def plot_prediction_comparison(
     rmse = np.sqrt(np.mean(valid_residuals**2))
     bias = np.mean(valid_residuals)
     stats_text = f'MAE: {mae:.2f}{unit}\nRMSE: {rmse:.2f}{unit}\nBias: {bias:.2f}{unit}'
-    axes[3].text(0.02, 0.98, stats_text, transform=axes[3].transAxes,
+    ax_bias.text(0.02, 0.98, stats_text, transform=ax_bias.transAxes,
                  verticalalignment='top', fontsize=10,
                  bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
 
@@ -998,15 +1045,27 @@ def _plot_training_curves_single(
 
     # Error / Loss
     ax = axes[1]
+    value_vars = ['Mean absolute error', 'train NLL', 'test NLL']
+    err_palette = {
+        'Mean absolute error': palette[2],
+        'train NLL': palette[3],
+        'test NLL': palette[4],
+    }
+    # CRPS is only logged for distributions that support it (e.g. precip); plot
+    # it alongside the losses when present and not entirely NaN so NLL- and
+    # CRPS-trained runs can be compared on a common CRPS curve.
+    if 'test CRPS' in fold_stats.columns and fold_stats['test CRPS'].notna().any():
+        value_vars.append('test CRPS')
+        err_palette['test CRPS'] = palette[5]
     long = fold_stats.melt(
         id_vars='Epoch',
-        value_vars=['Mean absolute error', 'train NLL', 'test NLL'],
+        value_vars=value_vars,
         var_name='Error / Loss',
         value_name='Value'
     )
     sns.lineplot(
         data=long, x='Epoch', y='Value', hue='Error / Loss',
-        palette={'Mean absolute error': palette[2], 'train NLL': palette[3], 'test NLL': palette[4]},
+        palette=err_palette,
         ax=ax
     )
     ax.set_title(f'Error/Loss ({title_suffix})')

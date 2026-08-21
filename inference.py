@@ -70,6 +70,39 @@ def predict_single_day(
     return predictions.squeeze(0), sigma.squeeze(0)
 
 
+def predict_day_range(
+    model: nn.Module,
+    context: torch.Tensor,
+    start: int,
+    end: int,
+    dists: torch.Tensor,
+    elev: torch.Tensor,
+    seasonal: torch.Tensor | None,
+    device: torch.device,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Predict a contiguous batch of days ``[start, end)`` in a single forward pass.
+
+    Identical maths to :func:`predict_single_day` but with batch dimension B = end - start,
+    which lets the GPU process many days at once instead of one at a time (the day axis is
+    just the model's batch axis; ``dists``/``elev`` are per-target-point and shared across
+    the batch, exactly as in training). Returns ``(B, n_points)`` predictions and sigmas.
+    """
+    model.eval()
+    with torch.no_grad():
+        day_context = context[start:end]                                  # (B, channels, lat, lon)
+        day_seasonal = seasonal[start:end] if seasonal is not None else None  # (B, 2) or None
+
+        # Mask from NaN in temperature channel (channel 0): observed -> 1, NaN -> 0.
+        nan_mask = torch.isnan(day_context[:, 0:1])                       # (B, 1, lat, lon)
+        mask = (~nan_mask).expand_as(day_context).float()
+        day_context = torch.nan_to_num(day_context, nan=0.0)
+
+        output = model(day_context, mask, dists, elev, seasonal=day_seasonal)
+        predictions = get_value_tmax(output)                             # (B, n_points)
+        sigma = get_sigma_tmax(output)                                   # (B, n_points)
+    return predictions, sigma
+
+
 def predict_holdout_fold(
     model: nn.Module,
     context: torch.Tensor,
@@ -115,10 +148,12 @@ def predict_holdout_fold(
 
         day_preds_denorm = metadata.denormalize(day_preds_np) - ds.KELVIN_OFFSET
         day_truth_denorm = metadata.denormalize(day_truth) - ds.KELVIN_OFFSET
+        # sigma is a spread, so only the std scale applies (no mean/Kelvin offset).
+        day_sigmas_denorm = day_sigmas_np * metadata.data_std
 
         fold_errors.append(day_preds_denorm - day_truth_denorm)
         fold_preds.append(day_preds_denorm)
-        fold_sigmas.append(day_sigmas_np)
+        fold_sigmas.append(day_sigmas_denorm)
         fold_truths.append(day_truth_denorm)
 
     return HoldoutFoldResult(
