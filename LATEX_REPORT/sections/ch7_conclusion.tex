@@ -1,0 +1,101 @@
+% !TEX root = ../main.tex
+% Chapter --- Conclusion
+\chapter{Conclusion}\label{ch:conclusion}
+
+\section{Findings}\label{sec:concl-findings}
+
+This work trained convolutional conditional neural processes to downscale ERA5 and ERA5-Land to the
+$1\,\mathrm{km}$ MeteoSwiss grid, for daily maximum temperature with a Gaussian head and for daily
+precipitation with a Bernoulli--Gamma head, and evaluated them across input sets, objectives and
+two strictly separated evaluation regimes: cross-validated holdout over 2020--2023 and an unseen
+2024. The Alps are a demanding place to do this, because the terrain that decides the local weather
+is exactly the terrain the coarse fields average away. This section summarises the findings and
+evaluates them against the research questions posed in \sref{sec:intro-questions}.
+
+For temperature we determined a clear  improvement when choosing atmospheric over the surface input. It beats surface
+input on every accuracy measure, MAE, RMSE, CRPS and skill, in both evaluation regimes, and the two input
+families do not merely differ in accuracy but also in how they generalise. Every atmospheric
+configuration holds or improves its score on the unseen year, while both surface
+configurations degrade. The gap between them opens primarily in the cold season, when the
+fine-scale truth decouples from the coarse surface field and only the atmospheric context can
+correct for this offset. This is the regime in which a purely spatial mapping is expected to fail,
+and the feature-importance study shows why one works while the other fails. The atmospheric models lean on lower-tropospheric
+temperature at physically sensible levels and hours rather than on coordinate, season or terrain
+channels, so what has been learnt is a meteorological relationship and not a trained spatial
+interpolation. \textcite{rampal2022interpretable} reach the same verdict for rainfall over the
+New Zealand Southern Alps with a grid-to-grid network and saliency maps, so the finding is not
+particular to this architecture or to this mountain range. The result is well calibrated and predicts cautiously on data it has never seen, which is the behaviour a user would want.
+
+
+Precipitation behaves differently. The atmospheric runs spread their reliance across humidity,
+temperature and geopotential, which is again the meteorologically meaningful behaviour, yet a
+surface run driven by the coarse precipitation field matches or beats them on most pooled scores.
+The atmospheric run fine-tuned on the CRPS is ahead of the surface run in the heaviest intensity
+category on the cross-validated holdout, but that advantage does not survive the unseen year, where
+every run scores at or below zero. Calibration for both configurations is acceptable.
+
+Both atmospheric and surface input are viable for precipitation. However the reliance of a sole input channel of the surface configuration carries the risk of overfitting and missing meteorological relationships. As performance is similar, the atmospheric input is preferred for its more robust generalisation and meteorological interpretability.
+
+
+Due to its available input resolution, the atmospheric input is not more expensive than surface runs. The bottleneck of the architecture is the distance matrix that maps from the input grid to the target points.
+Therefore the significantly larger number of input channels, $95$ against at most $7$ in the
+surface configurations, is more than paid for by the coarser $0.25^{\circ}$ lattice they are
+carried on. Training peaks
+below $2.2\,\mathrm{GB}$ at the batch size of $8$ used here and inference roughly halves that, so a single
+mid-range GPU is sufficient for training and inference.
+
+In complex terrain the architecture holds up for both variables. The selected temperature model
+reaches a skill of $0.71$ over bilinear ERA5-Land and an MAE of $1.03\,^{\circ}\mathrm{C}$ on the
+unseen year. It is skilful at all of the $147$ SMN stations, with a median skill of $+0.71$ (CV) and
+$+0.70$ (unseen). It has to be stated that those stations feed the gridded analyses the model was
+trained on and are therefore not a fully independent check (\cref{ch:stations}).
+\textcite{vaughan2022convcnp} report an MAE of $1.19\,^{\circ}\mathrm{C}$ at stations their model
+never saw, against $1.35\,^{\circ}\mathrm{C}$ for their Gaussian-process baseline, and name Alpine
+terrain as the region where their largest errors concentrate, without quantifying it separately. A
+continent-wide station mean is no benchmark for a domain that is Alpine throughout, and the target
+here is a gridded analysis rather than a station series, so the two numbers are context rather than
+a head-to-head comparison. What this work adds is a measurement of exactly that region.
+
+For precipitation the answer depends on what is being asked. Distributionally the models beat
+interpolation by a wide margin: the ranked probability skill of the two selected runs is $+0.47$ for \texttt{precip-SFC-TP} and
+$+0.42$ for \texttt{precip-FT-CRPS} on the cross-validated holdout and $+0.41$ and $+0.35$ on the unseen year.
+At the $139$ rain gauges the lowest median skill is $+0.43$.
+Evaluated on the predicted accumulation in millimetres, no run beats
+the ERA5 reference on the gridded target. One run reverses that verdict at the gauges:
+\texttt{precip-SFC-TP} beats the reference there in both regimes, by $0.13$ and
+$0.12\,\mathrm{mm\,day^{-1}}$, which is what a smoothed reference scored against a smoothed,
+interpolated truth would be expected to do.
+
+One known weakness of statistical downscaling is the drizzle bias of the coarse field, which calls wet days $38\,\%$ too often. The Bernoulli--Gamma head removes that bias and restores the observed intensity along with it. 
+
+On the precip models we showed that objective can impact the extreme tail. This lever however is not sufficient to close the gap, and a dedicated treatment of the tail is needed if accuracy in this region is required. The temperature models also present a tendency to over-predict temperature above $30\,^{\circ}\mathrm{C}$.
+
+
+
+\section{Limitations and Future Work}\label{sec:concl-future}
+
+Five limitations bound what the results above can claim, and three directions for future work follow from them.
+
+\begin{itemize}
+\item \textbf{No spatial coherence.} The factorised head predicts one marginal per target point
+(\sref{sec:bg-neural-processes}, \sref{subsec:meth-gaussian}), so every score is marginal, no
+multi-point product such as a catchment mean is available, and spatial oversmoothing cannot be
+judged at all. Autoregressive sampling of the existing checkpoints~\cite{bruinsma2023arcnp} would
+settle it without retraining; a joint Gaussian head~\cite{andersson2023convgnp} is the fuller fix.
+
+\item \textbf{The extreme tail.} No objective and no input reached it, for either variable, and
+temperature has no tail-specific score at all. It needs a dedicated treatment, upper-tail
+post-processing or a generative refinement step~\cite{harris2022generative, mardani2025corrdiff}.
+
+\item \textbf{Four years, and a schedule still improving.} Doubling the epoch budget beat every
+input modification tested (\sref{subsec:single-tmax-discussion}), so a longer training schedule, and a training period extended over more years to cover more rare events, is the natural next step. The same holds for the evaluation: 2024 is a single year, so the conclusions drawn from it may be shaped by the particular events it contained. A longer training period and more holdout years would provide a more robust evaluation of the model's performance.
+
+\item \textbf{Computation spent where it is not scored.} The loss is formed inside the Swiss border
+only, so $47\,\%$ of the RBF and elevation-MLP work carries no gradient. Supervising the whole target set would improve border accuracy. The width of the elevation MLP is the other open cost question: cost argues for a narrower
+one, the seasonal-input result for a wider one, and neither was tested.
+
+\item \textbf{Independence of station data.} The gridded target is interpolated from the same station network the verification uses, so the two are not fully independent. A stronger test would verify against an independently constructed product.
+\item \textbf{Is the learnt relationship physically meaningful?} The feature-importance study shows reliance on physically sensible inputs, which is evidence, not proof. Applying the trained model to comparable terrain elsewhere in the Alpine range would test whether the relationship travels, and the architecture permits it without retraining: the trunk is convolutional, the target set is arbitrary, and the elevation features are physical quantities computable from any terrain model. Only the coordinate channels are anchored to the training domain, and the near-zero reliance on them is exactly what such a transfer would confirm or refute; a retraining without latitude and longitude as inputs would remove that anchor altogether and show directly how much the model needs them.
+\item \textbf{Is the model robust to climate change?} The training years are historical, so nothing here shows whether the learnt mapping holds in a warmer climate; scenario-driven input would test that.
+\item \textbf{Weather models over reanalysis.} The input is reanalysis. Driving the same model with forecast fields, which carry different biases, would show whether the downscaling survives them, and would open the route to real-time use.
+\end{itemize}

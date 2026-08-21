@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>convNPClimate — Pipeline Diagrams</title>
+<style>
+  :root{--bg:#eef1f4;--surface:#fff;--ink:#131c24;--muted:#57697a;--line:#d3dbe2;--accent:#0d7a84}
+  @media(prefers-color-scheme:dark){:root{--bg:#0d141b;--surface:#141d26;--ink:#e7eef4;--muted:#93a6b5;--line:#233240;--accent:#41b7c2}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.6}
+  .wrap{max-width:1080px;margin:0 auto;padding:32px clamp(16px,4vw,40px) 80px}
+  h1{font-size:28px;margin:0 0 4px;letter-spacing:-.01em}
+  h2{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:34px 0 10px;font-family:ui-monospace,Menlo,monospace}
+  .sub{color:var(--muted);margin:0 0 20px;max-width:70ch}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}
+  figure{margin:0 0 30px;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  figure img{display:block;width:100%;height:auto;background:#fff}
+  figcaption{padding:11px 16px;font-size:13.5px;color:var(--muted);border-top:1px solid var(--line)}
+  figcaption b{color:var(--ink);font-weight:600}
+  a{color:var(--accent)}
+  .note{font-size:13px;color:var(--muted);border-left:3px solid var(--accent);padding:6px 0 6px 14px;margin:0 0 26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>convNPClimate — Pipeline Diagrams</h1>
+  <p class="sub">Static renders you can open anywhere — no browser plugin, no internet. Full code-exact prose lives in <code>docs/data_pipelines.md</code>; individual <code>.svg</code>/<code>.png</code> files sit beside this page in <code>docs/diagrams/</code> and open directly in VS Code's image preview.</p>
+  <p class="note">Regenerate the diagrams with <code>python scripts/gen_pipeline_diagrams.py</code> and <code>python scripts/gen_input_channels_figure.py</code>.</p>
+
+  <h2>Overview</h2>
+  <figure>
+    <img src="00_pipeline_overview_2level.svg" alt="Two-level overview: architecture behind, steps in front">
+    <figcaption><b>Overview (two-level)</b> — the ConvCNP architecture as an ambient backdrop with the six processing steps in front.</figcaption>
+  </figure>
+  <figure>
+    <img src="12_input_channels.svg" alt="Input channels: surface vs atmospheric with an emagram">
+    <figcaption><b>Input channels</b> — surface config (left, with icons) vs atmospheric config (right): a true ERA5 emagram with distinct <b>t</b> and <b>q</b> profiles and <b>z</b> geopotential height on the secondary axis; z·t·q × 6 levels × 5 hours = 90 channels.</figcaption>
+  </figure>
+
+  <h2>Temperature architecture</h2>
+  <figure>
+    <img src="10_tmax_full_architecture.svg" alt="Full temperature pipeline (horizontal)">
+    <figcaption><b>Full tmax pipeline — horizontal</b> — surface input (top) &amp; atmospheric input (bottom) into the shared ConvCNP; each stage (encoder, CNN, MLPs, RBF, elevation MLP) boxed as its own zone.</figcaption>
+  </figure>
+  <figure>
+    <img src="11_tmax_full_architecture_vertical.svg" alt="Full temperature pipeline (vertical)">
+    <figcaption><b>Full tmax pipeline — vertical</b> — the same architecture zones laid out top-to-bottom.</figcaption>
+  </figure>
+
+  <h2>Output heads</h2>
+  <figure>
+    <img src="14_both_heads.svg" alt="Both heads on one graph">
+    <figcaption><b>Both heads</b> — shared backbone branching into the Gaussian (tmax) and Bernoulli-Gamma (precip) heads on one graph.</figcaption>
+  </figure>
+  <figure><img src="13_tmax_head.svg" alt="Temperature Gaussian head"><figcaption><b>§3 Temperature</b> — Gaussian head: 2-param (μ,σ), single <code>gll</code> loss.</figcaption></figure>
+  <figure><img src="s3_precip.svg" alt="Precip Bernoulli-Gamma head"><figcaption><b>§3 Precip</b> — Bernoulli-Gamma head, <code>gamma_bernoulli</code> / <code>gamma_bernoulli_crps</code> loss.</figcaption></figure>
+
+  <h2>Master + per-pipeline flows</h2>
+  <figure><img src="00_master.svg" alt="All pipelines master diagram"><figcaption><b>Master</b> — how the eight pipelines connect: data prep → model → heads → training → downstream.</figcaption></figure>
+  <figure><img src="s0_backbone.svg" alt="Shared training backbone"><figcaption><b>§0 Shared backbone</b> — targets, distances, fold/batch, forward, loss.</figcaption></figure>
+  <figure><img src="s1_surface.svg" alt="Surface tmax pipeline"><figcaption><b>§1 Surface tmax</b> — <code>--use-surface</code> (±<code>--no-geopotential</code>).</figcaption></figure>
+  <figure><img src="s2_atmospheric.svg" alt="Atmospheric tmax pipeline"><figcaption><b>§2 Atmospheric tmax</b> — native grid, surface anchors, or regridded.</figcaption></figure>
+  <figure><img src="s4_evaluate.svg" alt="evaluate.py pipeline"><figcaption><b>§4 evaluate.py</b> — tmax holdout metrics + calibration.</figcaption></figure>
+  <figure><img src="s5_eval_precip.svg" alt="eval_precip.py pipeline"><figcaption><b>§5 eval_precip.py</b> — physical precip metrics + PIT.</figcaption></figure>
+  <figure><img src="s6_predict.svg" alt="predict.py pipeline"><figcaption><b>§6 predict.py</b> — inference over a date range → <code>.npz</code>.</figcaption></figure>
+  <figure><img src="s7_feature_importance.svg" alt="feature_importance.py pipeline"><figcaption><b>§7 feature_importance.py</b> — PFI / SHAP / LIME.</figcaption></figure>
+</div>
+</body>
+</html>

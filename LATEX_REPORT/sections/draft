@@ -1,0 +1,42 @@
+Here is a structure proposal for §5.1 (Temperature Model), grounded in what the seven runs and the collected figures actually support. The metrics themselves suggest a clear argumentative arc, so I'll give you the storyline first, then the section skeleton with the figure for each step, then the new figures I'd add.
+
+The argument the data supports
+
+1. Every variant beats the ERA5 reference by a wide margin — skill 0.57–0.71 against bilinear ERA5 (shared, verified-identical baseline), so downscaling works regardless of configuration.
+2. The input set is the decisive design choice: atmospheric pressure-level inputs beat the surface configuration on every metric, and — the strongest single finding — they generalise: on the unseen year 2024 all five atmospheric models improve slightly (ΔMAE −0.03 to −0.06 °C) while both surface models degrade (+0.05/+0.06 MAE, +0.11 RMSE).
+3. Training length is the biggest single lever: the 60-epoch retrains (clip60) cut MAE by ~0.15 °C over their 30-epoch counterparts. Wind alone hurts at 30 epochs (1.31 vs 1.24) but wins once trained long enough (1.055, the best model overall).
+4. Feature importance explains all the ablations: PFI/LIME show the models feed almost entirely on t at 1000/925 hPa at hours 12/15; u/v are nearly unused (why wind doesn't help per se), scaffold/lat/lon/elevation channels are nearly unused (why no-geo ≈ baseline), and the surface model leans on its data channel plus the seasonal encoding (why it fails to transfer).
+5. Honest caveats: on 2024 all models drift towards overdispersion (z-std ~0.84–0.90, coverage@90 ~93–94 %) — a side-effect of the between-fold variance term in the ensemble moment match — and the warm tail above ~30 °C is over-predicted by every model.
+
+Proposed skeleton for §5.1
+
+5.1.1 Model variants and evaluation protocol — a small table of the seven runs (label, input set, channels, epochs), one paragraph pointing back to the two regimes of §4.3. No figure.
+
+5.1.2 Headline accuracy and skill — regime_comparison ALL figure plus a compact metrics table (MAE/RMSE/CRPS/skill, CV and 2024 columns). Establishes claims 1 and 3.
+
+5.1.3 Generalisation to the unseen year — the Δ = 2024 − CV story (claim 2). This deserves its own subsection because it is your strongest result; support with perfold_spread (fold spread is small compared with the sfc/atm gap, so the ranking is robust).
+
+5.1.4 Where the error lives — terrain and season. Cross-model: region_bands_mae (sfc error grows with altitude, 1.38→1.52; clip60 models stay ~flat at 0.96–1.17). Then a deep dive on the best model only (atm+wind-clip60): spatial_mae, skill_map, doy_vs_error, mae_vs_elevmismatch. Per-model versions of these go to the appendix.
+
+5.1.5 Calibration and uncertainty — qq_calibration_overlay for CV and 2024 side by side, plus z-std/coverage/MACE rows in the metrics table. State the 2024 overdispersion and attribute it to the between-fold variance in the moment match. Best model's reliability_diagram/uncertainty_vs_error as the single-model view.
+
+5.1.6 Distributional fidelity and the warm tail — distribution_overlay_with_clip60_2024 (density, exceedance, ratio panels). One subsection, one figure: climatology is matched over ~50 °C of range; exceedance above ~30 °C is overestimated by all models.
+
+5.1.7 What the models use — fi_group_importance_pfi (and LIME as corroboration or appendix). Placed after the performance results so it reads as the explanation of 5.1.2–5.1.3, closing the loop on every ablation. Per-model heatmaps → appendix.
+
+5.1.8 Independent station verification — station_regime_comparison (28 NBCN stations). Confirms the ranking on point observations that never entered training; keep the figure's own caveat that pooled station skill is inflated and quote the lowland-overlay numbers instead.
+
+Then your existing Discussion (synthesis: recommend atm+wind-clip60, or atm-clip60 if you value parsimony since wind's contribution is marginal and its channels are unused by PFI; limits: warm tail, 2024 overdispersion) and Conclusion.
+
+This ordering is deliberately: it works → what matters → where it fails → is the uncertainty honest → why → independent check. Each subsection needs exactly one comparison figure plus at most one best-model figure, so the main text stays around 9–10 figures with the 7-model panels in the appendix.
+
+New figures worth generating
+
+- CV→2024 slope chart (dumbbell) for MAE and CRPS. The paired bars in regime_comparison hide the sign of the change, which is your key claim in 5.1.3 — a slope chart makes "atmospheric lines tilt down, surface lines tilt up" visible at a glance. Highest value-per-effort addition.
+- MAE difference map: best atmospheric model minus surface baseline (same colour scale, diverging). Shows where the atmospheric information pays off spatially — presumably the Alpine ridge — which no current figure shows directly.
+- MAE vs altitude as overlaid lines (7 models, one axes) to replace or back the grouped bars of region_bands_mae — the monotone-growth-for-sfc story reads better as lines.
+- σ decomposition on 2024: within-fold vs between-fold share of the ensemble variance (the data is already in report_metrics.json → sigma_decomposition). It would turn the overdispersion caveat in 5.1.5 from an assertion into a shown mechanism.
+
+Two housekeeping notes: images/results/ contains a stray directory old wrong reference model that the collector script would delete on the next refresh — worth confirming it holds nothing you need; and the ch5 skeleton's \includegraphics[\textwidth]{} at ch5_single_model.tex:7 is malformed (options belong in square brackets as width=\textwidth, and the argument is empty) so the chapter won't compile once uncommented.
+
+If this structure works for you, I can put the subsection skeleton with figure placeholders and the metrics table into ch5_single_model.tex, and/or write the generator script for any of the four proposed figures.

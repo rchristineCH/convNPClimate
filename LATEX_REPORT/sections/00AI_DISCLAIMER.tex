@@ -1,0 +1,23 @@
+% !TEX root = ../main.tex
+\par
+\vspace{\baselineskip}
+% Same \chapter* style as Acknowledgements, but with the page break suppressed
+% so both headings share one page. \par ensures titlesec sees vertical mode.
+{\let\cleardoublepage\relax\let\clearpage\relax
+ \par
+ \chapter*{Declaration on the Use of AI Tools}}
+\addcontentsline{toc}{chapter}{Declaration on the Use of AI Tools}
+Generative AI tools were used in the preparation of this thesis, in accordance
+with the guidelines of ETH Zurich, for the following purposes:
+
+\begin{itemize}
+\item \textbf{Code assistance.} Claude was used to help debug the training,
+    evaluation, and visualisation pipelines, to generate comparative metrics from  log files, and to produce figures. All generated code was reviewed, tested,
+    and corrected by the author.
+\item \textbf{Literature review.} Claude and Gemini were used to identify  relevant papers and sections and to extract key methods, results and conclusions. The implementation in the codebase was also cross-checked to the specific papers to identify any discrepancies or potential for improvement.
+Extracted information and findings were verified and interpreted by the author to ensure accuracy and relevance to the research questions. All used references were properly cited in the thesis.
+\item \textbf{Language editing.}  AI writing assistants were used to improve the structure, grammar, and style of the manuscript, not to generate scientific
+    content, arguments, or results.
+\end{itemize}
+
+The results were computed and visualised with code developed with the assistance of these tools. The design of the research, the interpretation of results and any conclusions drawn from the results were performed by the author. The author takes full responsibility for the content of this thesis. 

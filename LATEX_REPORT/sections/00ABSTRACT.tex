@@ -1,0 +1,32 @@
+% !TEX root = ../main.tex
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+Global reanalyses describe the atmosphere at a resolution of tens of kilometres, at which the
+terrain that decides Swiss weather has been averaged away. This work studies statistical
+downscaling of daily maximum temperature and daily precipitation from ERA5 and ERA5-Land to the
+one-kilometre MeteoSwiss analysis grids with Convolutional Conditional Neural Processes, an
+architecture that predicts a full probability distribution at arbitrary target coordinates. A
+Gaussian output head serves temperature and a Bernoulli--Gamma head precipitation. Twelve model
+configurations, seven for temperature and five for precipitation, are trained on 2020--2023 under a temporal five-fold cross-validation and
+evaluated twice: on their held-out folds and on 2024, a year no fold ever saw. A permutation-based
+feature-importance study measures the reliance on the different input channels. Finally, all selected
+models are verified against station observations that entered no training or selection step.
+
+For temperature, input built from the atmospheric state, pressure-level temperature, humidity,
+geopotential and wind, beats input built from the coarse surface field on every metric, and
+generalises better: the atmospheric configurations hold or improve on the unseen year while the surface
+configurations degrade, with the largest gap in the cold season, when the fine-scale truth
+decouples from the coarse field. The selected model reaches a skill of $0.71$ against bilinear
+interpolation and a mean absolute error of $1.03\,^{\circ}\mathrm{C}$ on 2024, and its
+importances sit on lower-tropospheric temperature at physically sensible levels and hours rather
+than on coordinates or terrain, so the learnt mapping is meteorological rather than a trained
+interpolation. For precipitation the value of the models is distributional: the Bernoulli--Gamma
+head removes the drizzle bias of the coarse field and restores the observed wet-day frequency and
+intensity, worth a ranked probability skill near $+0.4$ over five intensity categories in both
+regimes, while in plain millimetre error the reference interpolation remains unbeaten on the
+gridded target. Verification at $147$ temperature stations and $139$ rain gauges confirms both
+verdicts at real measurement points, where one of the two selected precipitation runs even takes the lower
+millimetre error. The heaviest precipitation events and the warm temperature tail remain beyond the reach
+of every configuration tested, and marginal per-point distributions leave the spatial coherence
+of the fields an open question.

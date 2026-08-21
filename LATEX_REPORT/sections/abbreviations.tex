@@ -1,0 +1,34 @@
+% !TEX root = ../main.tex
+\begingroup\small
+\renewcommand{\arraystretch}{1.2}
+\begin{longtable}{@{}p{0.125\textwidth} p{0.335\textwidth} p{0.11\textwidth} p{0.35\textwidth}@{}}
+
+\multicolumn{4}{@{}l}{\textbf{\large{Neural Processes \& Model Architecture}}} \\[0.3ex]
+ConvCNP & Convolutional Conditional Neural Process & ResNet & Residual Network \\
+CNN & Convolutional Neural Network & RBF & Radial Basis Function \\
+MLP & Multilayer Perceptron & DEM & Digital Elevation Model \\[3ex]
+
+\multicolumn{4}{@{}l}{\textbf{\large{Data, Products \& Coordinate Systems}}} \\[0.3ex]
+ECMWF & European Centre for Medium-Range Weather Forecasts & RhiresD & MeteoSwiss daily precipitation grid \\
+ERA5 & ECMWF Reanalysis v5 (ERA5-Land: land-surface component) & LV95 & Swiss coordinate reference frame (CH1903+\,/\,LV95) \\
+CDS & Climate Data Store & WGS84 & World Geodetic System 1984 \\
+MeteoSwiss & Federal Office of Meteorology and Climatology, Switzerland & UTC & Coordinated Universal Time \\
+NBCN & (Swiss) National Basic Climatological Network & TPI & Topographic Position Index \\
+DHM25 & Digital Height Model of Switzerland (25\,m resolution) & SMN & SwissMetNet, the MeteoSwiss automatic monitoring network \\[4ex]
+
+\multicolumn{4}{@{}l}{\textbf{\large{Evaluation Metrics}}} \\[0.3ex]
+MAE & Mean Absolute Error & PIT & Probability Integral Transform \\
+RMSE & Root-Mean-Square Error & CDF & Cumulative Distribution Function \\
+CRPS & Continuous Ranked Probability Score & SDII & Simple Daily Intensity Index \\
+CRPSS & Continuous Ranked Probability Skill Score & R01 & Wet-day frequency (days with precipitation $\geq 1$\,mm) \\
+BSS & Brier Skill Score & R10 & Heavy-precipitation-day frequency (days $> 10$\,mm) \\
+NLL & Negative Log-Likelihood & P98 & 98th percentile of daily precipitation \\
+RPSS & Ranked Probability Skill Score & $r_{S}$ & Spearman rank correlation \\[3ex]
+
+\multicolumn{4}{@{}l}{\textbf{\large{Training, Interpretability \& Computing}}} \\[0.3ex]
+CV & Cross-Validation ($K$-fold) & LIME & Local Interpretable Model-agnostic Explanations \\
+PFI & Permutation Feature Importance & GPU & Graphics Processing Unit \\
+SHAP & SHapley Additive exPlanations & CPU & Central Processing Unit \\
+
+\end{longtable}
+\endgroup

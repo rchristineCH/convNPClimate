@@ -1,0 +1,396 @@
+% Bibliography. Add entries here and \cite them in the text.
+% =============================================================================
+% Data sources (ERA5 via datasets/download_era5.py, MeteoSwiss via
+% datasets/download_meteoswiss.py).
+% TODO: CHECK LATER — DOIs, author lists, and publication/access years were
+% auto-generated and must be verified against the CDS/OGD "cite as" pages and
+% the actual download year before submission.
+% =============================================================================
+
+@misc{era5land_daily,
+  author       = {{Copernicus Climate Change Service (C3S)}},
+  title        = {{ERA5-Land post-processed daily statistics from 1950 to present}},
+  year         = {2019},
+  howpublished = {Copernicus Climate Change Service (C3S) Climate Data Store (CDS)},
+  doi          = {10.24381/cds.e9c9c792},
+  keywords     = {data}
+}
+
+@misc{era5_pressure_levels,
+  author       = {Hersbach, H. and others},
+  title        = {{ERA5 hourly data on pressure levels from 1940 to present}},
+  year         = {2023},
+  howpublished = {Copernicus Climate Change Service (C3S) Climate Data Store (CDS)},
+  doi          = {10.24381/cds.bd0915c6},
+  keywords     = {data}
+}
+
+@misc{era5_single_levels,
+  author       = {Hersbach, H. and others},
+  title        = {{ERA5 hourly data on single levels from 1940 to present}},
+  year         = {2023},
+  howpublished = {Copernicus Climate Change Service (C3S) Climate Data Store (CDS)},
+  doi          = {10.24381/cds.adbb2d47},
+  keywords     = {data}
+}
+
+@article{hersbach2020era5,
+  author  = {Hersbach, H. and Bell, B. and Berrisford, P. and others},
+  title   = {The {ERA5} global reanalysis},
+  journal = {Quarterly Journal of the Royal Meteorological Society},
+  volume  = {146}, number = {730}, pages = {1999--2049}, year = {2020},
+  doi     = {10.1002/qj.3803}
+}
+
+@article{munozsabater2021era5land,
+  author  = {Mu{\~n}oz-Sabater, J. and Dutra, E. and Agust{\'i}-Panareda, A. and others},
+  title   = {{ERA5-Land}: a state-of-the-art global reanalysis dataset for land applications},
+  journal = {Earth System Science Data},
+  volume  = {13}, number = {9}, pages = {4349--4383}, year = {2021},
+  doi     = {10.5194/essd-13-4349-2021}
+}
+
+@misc{meteoswiss_ogd_grid,
+  author       = {{MeteoSwiss}},
+  title        = {{Gridded daily climate data (TabsD, TminD, TmaxD, RhiresD), v2.0, LV95}},
+  year         = {2024},
+  howpublished = {Swiss Federal Office of Meteorology and Climatology (MeteoSwiss), Open Government Data},
+  note         = {Collection \texttt{ch.\allowbreak meteoschweiz.\allowbreak ogd-surface-derived-grid}, served through the STAC API at \url{https://data.geo.admin.ch/api/stac/v1/collections/ch.meteoschweiz.ogd-surface-derived-grid}},
+  url          = {https://opendatadocs.meteoswiss.ch/c-climate-data/c3-ground-based-climate-data},
+  urldate      = {2026-08-20},
+  keywords     = {data}
+}
+
+@misc{meteoswiss_rhiresd_doc,
+  author       = {{MeteoSwiss}},
+  title        = {Daily Precipitation (final analysis): {RhiresD}},
+  howpublished = {Federal Office of Meteorology and Climatology (MeteoSwiss), product documentation},
+  note         = {Daily totals accumulated from 06~UTC to 06~UTC of the following day},
+  url          = {https://www.meteoswiss.admin.ch/dam/jcr:4f51f0f1-0fe3-48b5-9de0-15666327e63c/ProdDoc_RhiresD.pdf},
+  urldate      = {2026-08-03},
+  keywords     = {data}
+}
+
+@misc{meteoswiss_ogd_nbcn,
+  author       = {{MeteoSwiss}},
+  title        = {Climate stations -- homogeneous data series ({Swiss} {NBCN})},
+  howpublished = {Federal Office of Meteorology and Climatology (MeteoSwiss), Open Government Data},
+  note         = {Collection \texttt{ch.\allowbreak meteoschweiz.\allowbreak ogd-nbcn}},
+  url          = {https://opendatadocs.meteoswiss.ch/c-climate-data/c1-climate-stations_homogeneous},
+  urldate      = {2026-08-17},
+  keywords     = {data}
+}
+
+@misc{meteoswiss_ogd_smn,
+  author       = {{MeteoSwiss}},
+  title        = {Automatic weather stations ({SwissMetNet})},
+  howpublished = {Federal Office of Meteorology and Climatology (MeteoSwiss), Open Government Data},
+  note         = {Collection \texttt{ch.\allowbreak meteoschweiz.\allowbreak ogd-smn}},
+  url          = {https://opendatadocs.meteoswiss.ch/a-data-groundbased/a1-automatic-weather-stations},
+  urldate      = {2026-08-17},
+  keywords     = {data}
+}
+
+@article{begert2005homogeneous,
+  author  = {Begert, M. and Schlegel, T. and Kirchhofer, W.},
+  title   = {Homogeneous temperature and precipitation series of {Switzerland} from 1864 to 2000},
+  journal = {International Journal of Climatology},
+  volume  = {25}, number = {1}, pages = {65--80}, year = {2005},
+  doi     = {10.1002/joc.1118}
+}
+
+@article{frei2014temperature,
+  author  = {Frei, C.},
+  title   = {Interpolation of temperature in a mountainous region using nonlinear profiles and non-{Euclidean} distances},
+  journal = {International Journal of Climatology},
+  volume  = {34}, number = {5}, pages = {1585--1605}, year = {2014},
+  doi     = {10.1002/joc.3786}
+}
+
+@article{frei1998precip,
+  author  = {Frei, C. and Sch{\"a}r, C.},
+  title   = {A precipitation climatology of the {Alps} from high-resolution rain-gauge observations},
+  journal = {International Journal of Climatology},
+  volume  = {18}, number = {8}, pages = {873--900}, year = {1998},
+  doi     = {10.1002/(SICI)1097-0088(19980630)18:8<873::AID-JOC255>3.0.CO;2-9}
+}
+
+@misc{meteoswiss_radiosounding,
+  author       = {{MeteoSwiss}},
+  title        = {Radio soundings: emagram, {Payerne} (06610), 29 July 2026, 12~UTC},
+  year         = {2026},
+  howpublished = {Federal Office of Meteorology and Climatology (MeteoSwiss), Data Warehouse, emaPlot R3.3},
+  url          = {https://www.meteoschweiz.admin.ch/service-und-publikationen/applikationen/radiosondierungen.html},
+  urldate      = {2026-07-30},
+  keywords     = {data}
+}
+
+@misc{meteoswiss_icon,
+  author       = {{MeteoSwiss}},
+  title        = {{ICON} forecasting systems},
+  year         = {2026},
+  howpublished = {Federal Office of Meteorology and Climatology (MeteoSwiss)},
+  note         = {Operational ensemble systems ICON-CH1-EPS (1\,km) and ICON-CH2-EPS (2.1\,km), replacing COSMO-1E/COSMO-2E},
+  url          = {https://www.meteoswiss.admin.ch/weather/warning-and-forecasting-systems/icon-forecasting-systems.html},
+  urldate      = {2026-07-29},
+  keywords     = {data}
+}
+
+@inproceedings{garnelo2018cnp,
+  author    = {Garnelo, M. and Rosenbaum, D. and Maddison, C. J. and Ramalho, T. and Saxton, D. and Shanahan, M. and Teh, Y. W. and Rezende, D. J. and Eslami, S. M. A.},
+  title     = {Conditional Neural Processes},
+  booktitle = {Proceedings of the 35th International Conference on Machine Learning ({ICML} 2018)},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {80},
+  pages     = {1704--1713},
+  year      = {2018},
+  url       = {https://proceedings.mlr.press/v80/garnelo18a.html}
+}
+
+@inproceedings{gordon2020convcnp,
+  author    = {Gordon, J. and Bruinsma, W. P. and Foong, A. Y. K. and Requeima, J. and Dubois, Y. and Turner, R. E.},
+  title     = {Convolutional Conditional Neural Processes},
+  booktitle = {8th International Conference on Learning Representations ({ICLR} 2020)},
+  year      = {2020},
+  doi       = {10.48550/arXiv.1910.13556}
+}
+
+@article{vaughan2022convcnp,
+  author  = {Vaughan, A. and Tebbutt, W. and Hosking, J. S. and Turner, R. E.},
+  title   = {Convolutional conditional neural processes for local climate downscaling},
+  journal = {Geoscientific Model Development},
+  volume  = {15}, number = {1}, pages = {251--268}, year = {2022},
+  doi     = {10.5194/gmd-15-251-2022}
+}
+
+@misc{meteoswiss_aircraft,
+  author       = {{MeteoSwiss}},
+  title        = {Observations from aircraft},
+  year         = {2026},
+  howpublished = {Federal Office of Meteorology and Climatology (MeteoSwiss)},
+  note         = {Aircraft ascent and descent profiles supplementing the radiosounding network},
+  url          = {https://www.meteoswiss.admin.ch/weather/measurement-systems/atmosphere/observations-from-aircraft.html},
+  keywords     = {data}
+}
+
+@article{cannon2008berngamma,
+  author  = {Cannon, A. J.},
+  title   = {Probabilistic multisite precipitation downscaling by an expanded
+             {Bernoulli--Gamma} density network},
+  journal = {Journal of Hydrometeorology},
+  volume  = {9}, number = {6}, pages = {1284--1300}, year = {2008},
+  doi     = {10.1175/2008JHM960.1}
+}
+
+@article{rampal2022interpretable,
+  author  = {Rampal, N. and Gibson, P. B. and Sood, A. and Stuart, S. and
+             Fauchereau, N. C. and Brandolino, C. and Noll, B. and Meyers, T.},
+  title   = {High-resolution downscaling with interpretable deep learning:
+             Rainfall extremes over {New Zealand}},
+  journal = {Weather and Climate Extremes},
+  volume  = {38}, pages = {100525}, year = {2022},
+  doi     = {10.1016/j.wace.2022.100525}
+}
+
+@article{mardani2025corrdiff,
+  author  = {Mardani, M. and Brenowitz, N. and Cohen, Y. and Pathak, J. and
+             Chen, C.-Y. and Liu, C.-C. and Vahdat, A. and Nabian, M. A. and
+             Ge, T. and Subramaniam, A. and Kashinath, K. and Kautz, J. and
+             Pritchard, M.},
+  title   = {Residual corrective diffusion modeling for km-scale atmospheric downscaling},
+  journal = {Communications Earth \& Environment},
+  volume  = {6}, pages = {124}, year = {2025},
+  doi     = {10.1038/s43247-025-02042-5}
+}
+
+@inproceedings{bruinsma2023arcnp,
+  author    = {Bruinsma, W. P. and Markou, S. and Requeima, J. and Foong, A. Y. K. and
+               Andersson, T. R. and Vaughan, A. and Buonomo, A. and Hosking, J. S. and
+               Turner, R. E.},
+  title     = {Autoregressive Conditional Neural Processes},
+  booktitle = {11th International Conference on Learning Representations ({ICLR} 2023)},
+  year      = {2023},
+  doi       = {10.48550/arXiv.2303.14468}
+}
+
+@article{andersson2023convgnp,
+  author  = {Andersson, T. R. and Bruinsma, W. P. and Markou, S. and Requeima, J. and
+             Coca-Castro, A. and Vaughan, A. and Ellis, A.-L. and Lazzara, M. A. and
+             Jones, D. and Hosking, J. S. and Turner, R. E.},
+  title   = {Environmental sensor placement with convolutional {Gaussian} neural processes},
+  journal = {Environmental Data Science},
+  volume  = {2}, pages = {e32}, year = {2023},
+  doi     = {10.1017/eds.2023.22}
+}
+
+@article{gneiting2007scoring,
+  author  = {Gneiting, T. and Raftery, A. E.},
+  title   = {Strictly proper scoring rules, prediction, and estimation},
+  journal = {Journal of the American Statistical Association},
+  volume  = {102}, number = {477}, pages = {359--378}, year = {2007},
+  doi     = {10.1198/016214506000001437}
+}
+
+@inproceedings{figurnov2018implicit,
+  author    = {Figurnov, M. and Mohamed, S. and Mnih, A.},
+  title     = {Implicit Reparameterization Gradients},
+  booktitle = {Advances in Neural Information Processing Systems 31 ({NeurIPS} 2018)},
+  pages     = {439--450},
+  year      = {2018},
+  url       = {https://papers.nips.cc/paper/7326-implicit-reparameterization-gradients}
+}
+
+@book{wilks2019statistical,
+  author    = {Wilks, D. S.},
+  title     = {Statistical Methods in the Atmospheric Sciences},
+  publisher = {Elsevier},
+  edition   = {4th},
+  year      = {2019},
+  doi       = {10.1016/C2017-0-03921-6}
+}
+
+@article{breiman2001rf,
+  author  = {Breiman, L.},
+  title   = {Random Forests},
+  journal = {Machine Learning},
+  volume  = {45}, number = {1}, pages = {5--32}, year = {2001},
+  doi     = {10.1023/A:1010933404324}
+}
+
+@article{fisher2019allmodels,
+  author  = {Fisher, A. and Rudin, C. and Dominici, F.},
+  title   = {All Models are Wrong, but Many are Useful: Learning a Variable's
+             Importance by Studying an Entire Class of Prediction Models
+             Simultaneously},
+  journal = {Journal of Machine Learning Research},
+  volume  = {20}, number = {177}, pages = {1--81}, year = {2019},
+  url     = {https://www.jmlr.org/papers/v20/18-760.html}
+}
+
+@article{hooker2021unrestricted,
+  author  = {Hooker, G. and Mentch, L. and Zhou, S.},
+  title   = {Unrestricted permutation forces extrapolation: variable importance
+             requires at least one more model, or there is no free variable
+             importance},
+  journal = {Statistics and Computing},
+  volume  = {31}, number = {82}, year = {2021},
+  doi     = {10.1007/s11222-021-10057-z}
+}
+
+@inproceedings{ribeiro2016lime,
+  author    = {Ribeiro, M. T. and Singh, S. and Guestrin, C.},
+  title     = {``Why Should {I} Trust You?'': Explaining the Predictions of
+               Any Classifier},
+  booktitle = {Proceedings of the 22nd {ACM} {SIGKDD} International Conference
+               on Knowledge Discovery and Data Mining ({KDD} 2016)},
+  pages     = {1135--1144},
+  year      = {2016},
+  doi       = {10.1145/2939672.2939778}
+}
+
+@inproceedings{lundberg2017shap,
+  author    = {Lundberg, S. M. and Lee, S.-I.},
+  title     = {A Unified Approach to Interpreting Model Predictions},
+  booktitle = {Advances in Neural Information Processing Systems 30 ({NIPS} 2017)},
+  year      = {2017},
+  url       = {https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html}
+}
+
+@article{aas2021dependent,
+  author  = {Aas, K. and Jullum, M. and L{\o}land, A.},
+  title   = {Explaining individual predictions when features are dependent:
+             More accurate approximations to {Shapley} values},
+  journal = {Artificial Intelligence},
+  volume  = {298}, number = {103502}, year = {2021},
+  doi     = {10.1016/j.artint.2021.103502}
+}
+
+@misc{meyes2019ablation,
+  author       = {Meyes, R. and Lu, M. and de Puiseau, C. W. and Meisen, T.},
+  title        = {Ablation Studies in Artificial Neural Networks},
+  year         = {2019},
+  howpublished = {arXiv:1901.08644},
+  url          = {https://arxiv.org/abs/1901.08644}
+}
+
+@book{molnar2022interpretable,
+  author    = {Molnar, C.},
+  title     = {Interpretable Machine Learning: A Guide for Making Black Box
+               Models Explainable},
+  publisher = {Independently published},
+  edition   = {2nd},
+  year      = {2022},
+  url       = {https://christophm.github.io/interpretable-ml-book/}
+}
+
+@techreport{passos,
+	address = {Zürich},
+	title = {Exploring {Convolutional} {Neural} {Process} for {Weather} {Downscaling}},
+	institution = {Swiss Data Science Center - Supervised by Christian Donner},
+	author = {Passos, Francisco},
+	month = feb,
+	year = {2026},
+	note = {Also available as arXiv:2607.04190},
+	doi = {10.48550/arXiv.2607.04190},
+}
+
+@misc{swisstopo_dhm25,
+  author       = {{Federal Office of Topography swisstopo}},
+  title        = {{DHM25}: The digital height model of {Switzerland} (25\,m resolution)},
+  url          = {https://www.swisstopo.admin.ch/en/height-model-dhm25},
+  urldate      = {2026-07-28},
+  keywords     = {data}
+}
+
+@misc{weiss2001tpi,
+  author       = {Weiss, A.},
+  title        = {Topographic Position and Landforms Analysis},
+  howpublished = {Poster presentation, ESRI User Conference, San Diego, CA, USA},
+  year         = {2001}
+}
+
+
+@article{panziera2010,
+  author  = {Panziera, Luca and Germann, Urs},
+  title   = {The relation between airflow and orographic precipitation on the
+             southern side of the Alps as revealed by weather radar},
+  journal = {Quarterly Journal of the Royal Meteorological Society},
+  volume  = {136}, number = {646}, pages = {222--238}, year = {2010},
+  doi     = {10.1002/qj.544}
+}
+
+@article{nisi2020,
+  author  = {Nisi, Luca and Hering, Alessandro and Germann, Urs and
+             Schroeer, Katharina and Barras, H{\'e}l{\`e}ne and
+             Kunz, Michael and Martius, Olivia},
+  title   = {Hailstorms in the Alpine region: Diurnal cycle, 4D-characteristics,
+             and the nowcasting potential of lightning properties},
+  journal = {Quarterly Journal of the Royal Meteorological Society},
+  volume  = {146}, number = {733}, pages = {4170--4194}, year = {2020},
+  doi     = {10.1002/qj.3897}
+}
+
+@misc{vandal2017deepsd,
+  author       = {Vandal, T. and Kodra, E. and Ganguly, S. and Michaelis, A. and Nemani, R. and Ganguly, A. R.},
+  title        = {{DeepSD}: Generating High Resolution Climate Change Projections through Single Image Super-Resolution},
+  year         = {2017},
+  howpublished = {arXiv},
+  doi          = {10.48550/arXiv.1703.03126}
+}
+
+@article{harris2022generative,
+  author  = {Harris, L. and McRae, A. T. T. and Chantry, M. and Dueben, P. D. and Palmer, T. N.},
+  title   = {A Generative Deep Learning Approach to Stochastic Downscaling of Precipitation Forecasts},
+  journal = {Journal of Advances in Modeling Earth Systems},
+  volume  = {14}, number = {12}, year = {2022},
+  doi     = {10.1029/2022MS003120}
+}
+
+@article{rampal2024enhancing,
+  author  = {Rampal, N. and Hobeichi, S. and Gibson, P. B. and Ba{\~n}o-Medina, J. and Abramowitz, G. and Beucler, T. and Gonz{\'a}lez-Abad, J. and Chapman, W. and Harder, P. and Guti{\'e}rrez, J. M.},
+  title   = {Enhancing Regional Climate Downscaling through Advances in Machine Learning},
+  journal = {Artificial Intelligence for the Earth Systems},
+  volume  = {3}, number = {2}, year = {2024},
+  doi     = {10.1175/AIES-D-23-0066.1}
+}
+

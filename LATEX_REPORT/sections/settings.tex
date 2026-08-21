@@ -1,0 +1,178 @@
+% !TEX root = ../main.tex
+
+\usepackage{amsmath}
+\newcommand\abs[1]{\left|#1\right|}
+\usepackage{amssymb}
+\usepackage{hyperref} %for url and other useful stuff
+        \urlstyle{same}
+% Do not break URLs at hyphens: url.sty allows a break after '-', and every PDF
+% text extractor then treats the trailing hyphen as end-of-line hyphenation and
+% drops it, so a copy-pasted URL loses the hyphen and 404s (e.g.
+% .../ch.meteoschweiz.ogd-surface-derived-grid -> .../ch.meteoschweiz.ogdsurface-derived-grid).
+% Breaks at '/' and '.' remain available, which is enough for the URLs used here.
+\makeatletter
+\g@addto@macro\UrlNoBreaks{\do\-}
+\makeatother
+% Last-resort stretch so a single unbreakable long name in the bibliography
+% overhangs the measure by nothing instead of by several millimetres.
+\setlength{\emergencystretch}{3em}
+\usepackage{helvet}
+%\renewcommand{\familydefault}{\sfdefault}
+\usepackage{sansmathfonts}
+\renewcommand{\rmdefault}{\sfdefault}
+
+
+
+\usepackage{subfiles} %permet d'avoir des sous fichiers
+%
+\usepackage{pdflscape} % \begin{landscape} ... \end{landscape} 
+\usepackage{multicol}
+\usepackage{multirow}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Graphics
+\usepackage{graphicx}
+\usepackage[font=footnotesize]{subfig}
+\usepackage[export]{adjustbox}
+\usepackage[font=footnotesize]{caption}
+\setcounter{secnumdepth}{6}
+\setcounter{tocdepth}{6}
+        \numberwithin{figure}{chapter}
+        \numberwithin{table}{chapter}
+\graphicspath{{sections/images/}{../sections/images/}} %permet d avoir les images dans un autres  dossier
+\usepackage{float} %picture placement
+\usepackage{placeins}%floatbarrier
+    \floatplacement{figure}{h}
+    \floatplacement{table}{h}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{colortbl}
+
+%\usepackage[final]{pdfpages} %add pdfs
+%\usepackage[draft]{pdfpages} % pdfs faster compil
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Customisation:
+\usepackage{titlesec} %no chapters for reports
+\usepackage{zref-titleref}
+        \makeatletter
+        \newcommand*{\currentname}{\zref@getcurrent{title}}
+        \makeatother
+\usepackage[bottom,hang]{footmisc} %Fußnoten
+\usepackage{enumitem}
+\setlist[itemize]{nosep}
+\setlist[enumerate]{nosep}
+%\usepackage{paralist} %customized lists
+\usepackage{todonotes}
+\presetkeys%
+    {todonotes}%
+    {inline}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Page Layout
+\usepackage[a4paper,twoside,centering,includehead,includefoot,margin=2.5cm,bindingoffset=0.5cm]{geometry}
+%\usepackage[myheadings]{fullpage}
+\usepackage{fancyhdr}
+\usepackage{emptypage}
+\pagestyle{fancy}
+ \setlength{\headheight}{16pt}
+ \setlength{\footskip}{2cm}
+% \setlength{\textheight}{220mm}
+% \setlength{\textwidth}{150mm}
+% \setlength{\hoffset}{1in-17.5mm}
+% \setlength{\headwidth}{\textwidth}
+%  \setlength{\marginparwidth}{0mm}
+%         \addtolength{\headwidth}{\marginparwidth}
+%  \setlength{\marginparpush}{0mm}
+%          \addtolength{\headwidth}{\marginparpush}
+ %\setlength{\oddsidemargin}{0cm}
+ %\setlength{\evensidemargin}{0cm}
+%  \setlength{\marginparsep}{0mm}
+%          \addtolength{\headwidth}{\marginparsep}
+
+\fancyhead[LO RE]{\includegraphics[height=11pt]{sections/TITLE/ethz.png}\quad \includegraphics[height=11pt]{sections/TITLE/SDSC.png}}
+\let\Sectionmark\sectionmark
+\def\sectionmark#1{\def\Sectionname{#1}\Sectionmark{#1}}
+\let\Subsectionmark\subsectionmark
+\def\subsectionmark#1{\def\Subsectionname{#1}\Subsectionmark{#1}}
+\fancyhead[RO]{\rightmark}
+\fancyhead[LE]{\leftmark}
+\rfoot{}
+\lfoot{}
+\cfoot{\thepage}
+%customized spacings
+%
+%
+ \usepackage[subfigure]{tocloft}
+        \setlength{\cftchapnumwidth}{0.5cm}
+         \setlength{\cftsecnumwidth}{1.5cm}
+         \setlength{\cftsubsecnumwidth}{1.4cm}
+         \setlength{\cftsubsubsecnumwidth}{1.8cm}
+         \renewcommand\cftchapafterpnum{\vskip1pt}
+                 \setlength{\cftbeforechapskip}{5pt}     
+        \renewcommand\cftsecafterpnum{\vskip1pt}
+                \setlength{\cftbeforesecskip}{1pt}  
+                
+                \cftsetindents{figure}{0em}{1.5cm}
+                \cftsetindents{table}{0em}{1.5cm}
+%\titlespacing*{hcommandi}{hlefti}{hbefore-sepi}{hafter-sepi}[hright-sepi]
+\titleformat{\chapter}[display]
+{\normalfont\Large\bfseries}{\chaptertitlename\ \thechapter}{6pt}{\LARGE}
+ \titlespacing{\chapter}{0pt}{0pt}{12pt}
+ \titlespacing{\section}{20pt}{14pt}{5pt}
+ \titlespacing{\subsection}{20pt}{8pt}{4pt}
+ \titlespacing{\subsubsection}{20pt}{6pt}{4pt}
+% \titlespacing{\paragraph}{10pt}{2pt}{2pt}
+ \titlespacing{\subparagraph}{20pt}{2pt}{2pt}
+% \titleformat*{\subparagraph}{\bfseries\itshape}
+\raggedbottom
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{black}{rgb}{0,0,0}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.65,0,0.82}
+\definecolor{backcolour}{rgb}{0.97,0.97,0.97}
+\definecolor{codeorange}{rgb}{1,0.31,0}
+\usepackage{longtable}
+\renewcommand{\arraystretch}{1.4} %jolie tableau
+
+%OTHERS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xparse}
+        \ExplSyntaxOn
+        \NewDocumentCommand{\convertto}{mm}
+                % #1 = em or ex (or any other unit)
+                % #2 = dimen to convert
+         {  \texttt{#2~=~\fp_to_decimal:n { (#2)/(1#1) }#1} }
+         \ExplSyntaxOff
+\newcommand\bfref[1]{(Figure \ref{#1})}
+\newcommand\fref[1]{Figure \ref{#1}}
+\newcommand\btref[1]{(Table \ref{#1})}
+\newcommand\tref[1]{Table \ref{#1}}
+\newcommand\sref[1]{Section \ref{#1}}
+% NOTE: \cref is deliberately overloaded here as a plain "Chapter <ref>" macro.
+% Do not load cleveref in this document -- it defines \cref and the two will clash.
+\newcommand\cref[1]{Chapter \ref{#1}}
+\newcommand\bsref[1]{(Section \ref{#1})}
+\newcommand\eref[1]{eq. (\ref{#1})}
+\newcommand{\image}[2][]{%
+    \includegraphics[height=5cm]{#2}}
+\newcommand{\twoimage}[2][]{%
+    \includegraphics[width=0.48\textwidth]{#2}}
+\newcommand{\grad}{\nabla}
+% Yellow-highlighted passage: draft material that still has to be reworked.
+% \rework{...} takes ONE passage (no sectioning commands, no floats inside).
+% Optional argument adds a trailing tag, e.g. \rework[to be reworked]{...}.
+\newcommand{\rework}[2][]{\par\noindent
+    \colorbox{yellow}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{#2%
+    \if\relax\detokenize{#1}\relax\else\ \emph{[#1]}\fi}}\par}
+% \reworknote marks a whole section: a yellow banner placed under its heading.
+\newcommand{\reworknote}[1][This section is still to be reworked.]{\par\noindent
+    \colorbox{yellow}{\parbox{\dimexpr\linewidth-2\fboxsep\relax}{\emph{#1}}}\par\medskip}
+\def\R{\textsuperscript{\textregistered}~}
+\def\tcf{\centering\footnotesize}
+
+\usepackage[per-mode=symbol]{siunitx}
+
+\renewcommand\unit[1]{~[\si{#1}]~} % siunitx already defines \unit
+\newcommand{\bbbox}[1]{\setlength{\fboxsep}{0pt}
+\setlength{\fboxrule}{0.8pt}\fbox{#1}}
+\newcommand\ssfrac[2]{#1/#2}
+\newcommand{\ta}{\large{$a$ }\normalsize }

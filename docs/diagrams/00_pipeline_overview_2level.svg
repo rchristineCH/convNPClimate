@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 260" width="1200" height="260" font-family="Helvetica, Arial, sans-serif" role="img" aria-label="Two-level pipeline overview: ConvCNP architecture behind, processing steps in front">
+  <defs>
+    <pattern id="gridDots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="2.4" fill="#2560a6" opacity="0.55"/>
+    </pattern>
+    <pattern id="fineDots" width="11" height="11" patternUnits="userSpaceOnUse">
+      <circle cx="5.5" cy="5.5" r="1.5" fill="#2c8b58" opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- panel -->
+  <rect x="0" y="0" width="1200" height="260" rx="12" fill="#f6f8fa" stroke="#b9c4cd"/>
+  <text x="24" y="28" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#57697a" letter-spacing="0.4">Behind: the ConvCNP architecture &#183; In front: the processing steps</text>
+
+  <!-- ===== BACKGROUND: architecture (ambient) ===== -->
+  <g opacity="0.42">
+    <!-- coarse ERA5 grid + conv kernel -->
+    <rect x="52" y="52" width="140" height="120" fill="url(#gridDots)"/>
+    <rect x="112" y="88" width="40" height="40" rx="3" fill="none" stroke="#2c8b58" stroke-width="1.5" opacity="0.8"/>
+    <!-- flow into CNN -->
+    <path d="M196 112 H340" fill="none" stroke="#7d8b98" stroke-width="1.5"/>
+    <path d="M486 112 H520" fill="none" stroke="#7d8b98" stroke-width="1.5"/>
+    <!-- ResNet CNN stack (6 blocks) -->
+    <g fill="#2c8b58" fill-opacity="0.22" stroke="#2c8b58" stroke-opacity="0.55">
+      <rect x="344" y="58" width="15" height="108" rx="3"/>
+      <rect x="367" y="58" width="15" height="108" rx="3"/>
+      <rect x="390" y="58" width="15" height="108" rx="3"/>
+      <rect x="413" y="58" width="15" height="108" rx="3"/>
+      <rect x="436" y="58" width="15" height="108" rx="3"/>
+      <rect x="459" y="58" width="15" height="108" rx="3"/>
+    </g>
+    <!-- RBF read-out fanning to the target cloud -->
+    <g fill="none" stroke="#2c8b58" stroke-opacity="0.4">
+      <path d="M520 112 L672 110"/>
+      <path d="M520 112 L688 76"/>
+      <path d="M520 112 L700 144"/>
+      <path d="M520 112 L724 96"/>
+      <path d="M520 112 L694 160"/>
+    </g>
+    <!-- dense MeteoSwiss target cloud -->
+    <path d="M668 114 C688 62 772 52 842 66 C916 48 1016 66 1082 98 C1128 120 1104 182 1014 181 C910 183 796 180 744 164 C690 147 648 146 668 114 Z" fill="url(#fineDots)" stroke="#2c8b58" stroke-opacity="0.4" stroke-width="1.25"/>
+  </g>
+  <!-- architecture region labels -->
+  <g font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#57697a" text-anchor="middle" opacity="0.85">
+    <text x="122" y="196">ERA5 grid</text>
+    <text x="409" y="196">ResNet &#215;6</text>
+    <text x="545" y="196">RBF read-out</text>
+    <text x="900" y="196">88,800 target points</text>
+  </g>
+
+  <!-- ===== FOREGROUND: processing steps (frosted band + nodes) ===== -->
+  <rect x="0" y="96" width="1200" height="92" fill="#ffffff" opacity="0.55"/>
+  <line x1="183" y1="126" x2="1017" y2="126" stroke="#b9c4cd" stroke-width="2"/>
+  <g text-anchor="middle">
+    <circle cx="183" cy="126" r="16" fill="#0d7a84"/>
+    <text x="183" y="131" fill="#ffffff" font-size="14" font-weight="700">1</text>
+    <text x="183" y="158" fill="#131c24" font-size="12.5" font-weight="700">Load + snap ERA5</text>
+    <text x="183" y="172" fill="#57697a" font-size="10.5" font-family="ui-monospace, Menlo, monospace">datasets.py</text>
+    <circle cx="350" cy="126" r="16" fill="#0d7a84"/>
+    <text x="350" y="131" fill="#ffffff" font-size="14" font-weight="700">2</text>
+    <text x="350" y="158" fill="#131c24" font-size="12.5" font-weight="700">Assemble context</text>
+    <text x="350" y="172" fill="#57697a" font-size="10.5" font-family="ui-monospace, Menlo, monospace">train.py</text>
+    <circle cx="517" cy="126" r="16" fill="#0d7a84"/>
+    <text x="517" y="131" fill="#ffffff" font-size="14" font-weight="700">3</text>
+    <text x="517" y="158" fill="#131c24" font-size="12.5" font-weight="700">Targets + distances</text>
+    <text x="517" y="172" fill="#57697a" font-size="10.5" font-family="ui-monospace, Menlo, monospace">datasets.py</text>
+    <circle cx="683" cy="126" r="16" fill="#0d7a84"/>
+    <text x="683" y="131" fill="#ffffff" font-size="14" font-weight="700">4</text>
+    <text x="683" y="158" fill="#131c24" font-size="12.5" font-weight="700">Fold + batch</text>
+    <text x="683" y="172" fill="#57697a" font-size="10.5" font-family="ui-monospace, Menlo, monospace">per epoch</text>
+    <circle cx="850" cy="126" r="16" fill="#0d7a84"/>
+    <text x="850" y="131" fill="#ffffff" font-size="14" font-weight="700">5</text>
+    <text x="850" y="158" fill="#131c24" font-size="12.5" font-weight="700">Forward pass</text>
+    <text x="850" y="172" fill="#57697a" font-size="10.5" font-family="ui-monospace, Menlo, monospace">encode&#8594;CNN&#8594;RBF</text>
+    <circle cx="1017" cy="126" r="16" fill="#0d7a84"/>
+    <text x="1017" y="131" fill="#ffffff" font-size="14" font-weight="700">6</text>
+    <text x="1017" y="158" fill="#131c24" font-size="12.5" font-weight="700">Loss / predict</text>
+    <text x="1017" y="172" fill="#57697a" font-size="10.5" font-family="ui-monospace, Menlo, monospace">gll &#183; gamma_bernoulli</text>
+  </g>
+</svg>

@@ -1,0 +1,78 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Most General
+%\documentclass[twoside,12pt,a4paper]{book}
+\documentclass[12pt,a4paper,twoside,openany]{report}
+\DeclareMathSizes{12}{12}{8}{8}
+%\documentclass[12pt,a4paper,twoside,openright]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\input{sections/settings}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage[backend=biber,sorting=none,maxcitenames=1,mincitenames=1]{biblatex}
+\addbibresource{references.bib}
+% xurl AFTER biblatex: it allows a URL to break at any character (without
+% inserting a hyphen) and sets biblatex's biburl penalties, which is what keeps
+% the long OGD/NeurIPS URLs of the bibliography inside the text block. The
+% no-break-after-hyphen patch of settings.tex survives it -- xurl redefines
+% \UrlBreaks, not \UrlNoBreaks -- so copy-pasted URLs still keep their hyphens.
+\usepackage{xurl}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{alph}
+\setcounter{page}{-1}
+\subfile{sections/TITLE/00_titlepage}
+\pagenumbering{roman}
+\setcounter{page}{0}
+\include{sections/00ABSTRACT}
+\input{sections/00AKNOW}
+\input{sections/00AI_DISCLAIMER}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\chapter*{Contents}\addcontentsline{toc}{chapter}{Contents}
+{\makeatletter
+\let\@cftmaketoctitle\relax
+\tableofcontents% Print List of Figures
+\makeatother}
+\clearpage
+\chapter*{List of Figures}\addcontentsline{toc}{chapter}{List of Figures}
+{\makeatletter
+\let\@cftmakeloftitle\relax
+\listoffigures% Print List of Figures
+\makeatother}
+\begingroup\let\clearpage\relax
+\chapter*{List of Tables}\addcontentsline{toc}{chapter}{List of Tables}{\makeatletter
+\let\@cftmakelottitle\relax
+\listoftables% Print List of Figures
+\makeatother}
+\endgroup
+
+ \chapter*{List of Abbreviations} \addcontentsline{toc}{chapter}{List of Abbreviations}
+\fancyhead[RO]{LIST OF ABBREVIATIONS}
+\fancyhead[LE]{LIST OF ABBREVIATIONS}
+ \input{sections/abbreviations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \clearpage
+        \pagenumbering{arabic}
+        \setcounter{page}{1}
+        \fancyhead[RO]{\rightmark}
+\fancyhead[LE]{\leftmark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{sections/ch1_introduction}
+\include{sections/ch2_background}
+\include{sections/ch3_data}
+\include{sections/ch4_methodology}
+\include{sections/ch5_single_model}
+\include{sections/ch5b_stations}
+\include{sections/ch7_conclusion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\nocite{*}
+\printbibliography[notkeyword=data, title=References,   heading=bibintoc]
+\printbibliography[keyword=data,    title=Data Sources, heading=bibintoc]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{sections/ch8_appendix}
+\end{document}
+
