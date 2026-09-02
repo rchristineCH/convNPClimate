@@ -188,7 +188,7 @@ Calibration is assessed through the probability integral transform: if the predi
 \subsection{Temperature Skill and Calibration}\label{subsec:app-skill-tmax}
 
 \paragraph*{Skill against the interpolated input (CRPSS).}
-The temperature reference forecast is the ERA5-Land daily maximum $2\,\mathrm{m}$ temperature field, $\mathrm{t2m\_max}$ on the $0.1^{\circ}$ grid of \tref{tab:data-grids}, bilinearly interpolated to the MeteoSwiss target points. It is worth being explicit about the product, because it is not the input grid of every model: the atmospheric configurations read ERA5 at $0.25^{\circ}$ and never see a surface field at all, so their reference is loaded separately rather than taken from their own context. Being deterministic, its CRPS equals its absolute error, and
+The temperature reference forecast is the ERA5-Land daily maximum $2\,\mathrm{m}$ temperature field, $\mathrm{t2m\_max}$ on the $0.1^{\circ}$ grid of \tref{tab:data-grids}, bilinearly interpolated to the MeteoSwiss target points. This product is not the input grid of every model: the atmospheric configurations read ERA5 at $0.25^{\circ}$ and never see a surface field at all, so their reference is loaded separately rather than taken from their own context. Being deterministic, its CRPS equals its absolute error, and
 \begin{equation}
     \mathrm{CRPSS} \;=\; 1 - \frac{\overline{\mathrm{CRPS}}_{\mathrm{model}}}{\overline{\mathrm{CRPS}}_{\mathrm{ref}}}
     \label{eq:crpss}

@@ -24,7 +24,7 @@ temperature at physically sensible levels and hours rather than on coordinate, s
 channels, so what has been learnt is a meteorological relationship and not a trained spatial
 interpolation. \textcite{rampal2022interpretable} reach the same verdict for rainfall over the
 New Zealand Southern Alps with a grid-to-grid network and saliency maps, so the finding is not
-particular to this architecture or to this mountain range. The result is well calibrated and predicts cautiously on data it has never seen, which is the behaviour a user would want.
+particular to this architecture or to this mountain range. The result is well calibrated and predicts cautiously on data it has never seen.
 
 
 Precipitation behaves differently. The atmospheric runs spread their reliance across humidity,
@@ -47,8 +47,8 @@ mid-range GPU is sufficient for training and inference.
 In complex terrain the architecture holds up for both variables. The selected temperature model
 reaches a skill of $0.71$ over bilinear ERA5-Land and an MAE of $1.03\,^{\circ}\mathrm{C}$ on the
 unseen year. It is skilful at all of the $147$ SMN stations, with a median skill of $+0.71$ (CV) and
-$+0.70$ (unseen). It has to be stated that those stations feed the gridded analyses the model was
-trained on and are therefore not a fully independent check (\cref{ch:stations}).
+$+0.70$ (unseen). Those stations feed the gridded analyses the model was
+trained on, though, so they are not a fully independent check (\cref{ch:stations}).
 \textcite{vaughan2022convcnp} report an MAE of $1.19\,^{\circ}\mathrm{C}$ at stations their model
 never saw, against $1.35\,^{\circ}\mathrm{C}$ for their Gaussian-process baseline, and name Alpine
 terrain as the region where their largest errors concentrate, without quantifying it separately. A
@@ -88,7 +88,7 @@ temperature has no tail-specific score at all. It needs a dedicated treatment, u
 post-processing or a generative refinement step~\cite{harris2022generative, mardani2025corrdiff}.
 
 \item \textbf{Four years, and a schedule still improving.} Doubling the epoch budget beat every
-input modification tested (\sref{subsec:single-tmax-discussion}), so a longer training schedule, and a training period extended over more years to cover more rare events, is the natural next step. The same holds for the evaluation: 2024 is a single year, so the conclusions drawn from it may be shaped by the particular events it contained. A longer training period and more holdout years would provide a more robust evaluation of the model's performance.
+input modification tested (\sref{subsec:single-tmax-discussion}), so a longer training schedule, and a training period extended over more years to cover more rare events, is the natural next step. The same holds for the evaluation: 2024 is a single year, so the conclusions drawn from it may be shaped by the particular events it contained, and more holdout years would guard against that.
 
 \item \textbf{Computation spent where it is not scored.} The loss is formed inside the Swiss border
 only, so $47\,\%$ of the RBF and elevation-MLP work carries no gradient. Supervising the whole target set would improve border accuracy. The width of the elevation MLP is the other open cost question: cost argues for a narrower

@@ -111,7 +111,7 @@ bilinear ERA5-Land & 2.56 & 2.54 & 3.36 & 3.35 & 2.56 & 2.54 & 0 & 0 \\
 
 
 
-Generalisation is strong: the best models achieve a CRPS as low as $0.74\,^{\circ}\mathrm{C}$ on the unseen year. The atmospheric models outperform the surface models on every metric (\fref{fig:single-tmax-slope}), and the gap holds on the year no fold saw. Furthermore they have potential for further improvement with an extended training budget, as evidenced by the performance of the \texttt{atm-clip60} and \texttt{atm+wind-clip60} models. The wind channels need the longer budget before they pay off: at $30$ epochs \texttt{atm+wind} ($155$ channels) is worse than \texttt{atm} ($95$), $1.31$ against $1.24\,^{\circ}\mathrm{C}$ CV MAE, while under the extended budget \texttt{atm+wind-clip60} becomes the best model of the comparison, ahead of \texttt{atm-clip60} at $1.05$ against $1.09$. The training curves show why, and show that the extended run was still improving when it ended (\sref{sec:app-tmax-metrics}). All models with atmospheric input show better generalisation than those limited to surface input.
+Generalisation is strong: the best models achieve a CRPS as low as $0.74\,^{\circ}\mathrm{C}$ on the unseen year. The atmospheric models outperform the surface models on every metric (\fref{fig:single-tmax-slope}), and the gap holds on the year no fold saw. Furthermore they have potential for further improvement with an extended training budget, as evidenced by the performance of the \texttt{atm-clip60} and \texttt{atm+wind-clip60} models. The wind channels need the longer budget before they pay off: at $30$ epochs \texttt{atm+wind} ($155$ channels) is worse than \texttt{atm} ($95$), $1.31$ against $1.24\,^{\circ}\mathrm{C}$ CV MAE, while under the extended budget \texttt{atm+wind-clip60} becomes the best model of the comparison, ahead of \texttt{atm-clip60} at $1.05$ against $1.09$. The training curves show why, and show that the extended run was still improving when it ended (\sref{sec:app-tmax-metrics}). Every model with atmospheric input holds or improves its skill on the unseen year, while both surface models degrade.
 
 Including surface anchors improves the performance of the atmospheric model, however the gain is small.
 
@@ -372,7 +372,7 @@ One design choice looks wrong in hindsight, and it concerns the domain rather th
 
 
 
-This chapter answers the two questions it set out to ask (\sref{sec:intro-questions}) for temperature. Meteorologically relevant features do improve accuracy and calibration over surface data: atmospheric input beats surface input on every metric, keeps improving rather than degrading on the unseen 2024 year, and the selected model, \texttt{atm+wind-clip60}, reaches a skill of $0.71$ and a MAE of $1.03\,^{\circ}\mathrm{C}$ with a small, well-behaved warm bias as its only significant caveat.
+This chapter answers the two questions it set out to ask (\sref{sec:intro-questions}) for temperature. Meteorologically relevant features do improve accuracy over surface data: atmospheric input beats surface input on every metric, keeps improving rather than degrading on the unseen 2024 year, and the selected model, \texttt{atm+wind-clip60}, reaches a skill of $0.71$ and a MAE of $1.03\,^{\circ}\mathrm{C}$ with a small, well-behaved warm bias as its only significant caveat.
 
 
 The model also learns physically meaningful structure rather than acting as a trained interpolator: it relies on lower-tropospheric temperature at the hours a warm front or a clear midday sky would matter, not on scaffold or coordinate channels, and this reliance lets it, unlike the surface models, generalise better to weather it never trained on. The remaining weaknesses are the MAE over the inner-Alpine valley floors, the warm tail, and the cold-season decoupling of surface-driven inputs.
@@ -459,7 +459,7 @@ strongly positive for all of them. The two agree on the ranking apart from the t
 \label{fig:single-precip-slope-skill}
 \end{figure}
 
-Together the two figures show why precipitation is complex to evaluate. In \fref{fig:single-precip-slope} the two error measures, MAE and rank correlation, favour the reference, while the two physical measures, occurrence and intensity, favour the downscaling runs. \fref{fig:single-precip-slope-skill} turns that split into a disagreement of sign: scored against the same reference, the MAE skill of \eref{eq:mae-skill} is negative for every run in both regimes while the RPSS of \eref{eq:rpss} is strongly positive for all of them. Studying a headline metric is therefore not enough to make a statement about model performance, and a more detailed analysis is needed to understand the strengths and weaknesses of each run.
+Together the two figures show why precipitation is complex to evaluate. In \fref{fig:single-precip-slope} the two error measures, MAE and rank correlation, favour the reference, while the two physical measures, occurrence and intensity, favour the downscaling runs. \fref{fig:single-precip-slope-skill} turns that split into a disagreement of sign: scored against the same reference, the MAE skill of \eref{eq:mae-skill} is negative for every run in both regimes while the RPSS of \eref{eq:rpss} is strongly positive for all of them. A single headline metric would have hidden this split entirely.
 
 
 \begin{table}[H]
@@ -718,16 +718,16 @@ both runs holding wet-day occurrence within a few percent of observed under eith
 Two results of this section are worth separating from the model ranking. The first is that pointwise
 error and distributional skill disagree in sign: no run beats bilinear interpolation in millimetres,
 yet every run beats it by a wide margin on the five-category RPSS and on occurrence and intensity.
-This is the behaviour the literature predicts. A smoothed coarse field is hard to beat on a squared
+A smoothed coarse field is hard to beat on a squared
 or absolute error while being wrong about the shape of the distribution, which is why the reference
 calls wet days $38\,\%$ too often where the runs stay within a few per cent. The Bernoulli--Gamma
-head buys that correction, as \textcite{cannon2008berngamma} report for density networks and
+head buys that correction, as \textcite{cannon2008berngamma} also report for density networks and
 \textcite{vaughan2022convcnp} adopt for the same reason; the indices used here are theirs, and they
 are used precisely because a pointwise score would hide the improvement. Their European,
 station-based evaluation is not directly comparable to a Swiss gridded target, so no number is set
 against theirs. The feature importance adds the interpretability side of the same point: the
 atmospheric runs distribute their reliance across humidity, temperature and geopotential rather than
-onto one channel, which is the meteorological rather than geographical reliance. \textcite{rampal2022interpretable} report the same for a grid-to-grid network over the New Zealand Southern Alps, read off saliency maps rather than permutation importance, so the conclusion now holds across two mountainous domains, two model geometries and two attribution methods.
+onto one channel, which is the meteorological rather than geographical reliance. \textcite{rampal2022interpretable} report the same for a grid-to-grid network over the New Zealand Southern Alps, read off saliency maps rather than permutation importance, so the same pattern is also seen in a second mountainous domain, with a different model geometry and a different attribution method.
 
 The second is that the issue of extreme tail remains unsolved. The tail reversal of
 \sref{subsec:single-precip-categories} is a CV-holdout result only: on 2024 the heaviest category is
