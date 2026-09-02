@@ -1,4 +1,4 @@
-% Chapter 5: Single-Model Performance  (FOCUS 1)
+% Chapter 5: Single-Model Performance  (FOCUS 1)
 
 \chapter{Single-Model Performance}\label{ch:single-model}
 
@@ -76,11 +76,11 @@ This chapter evaluates the models that downscale one variable at a time. Every r
 
 
 
-Skill is the CRPSS of \eref{eq:crpss} against the bilinear ERA5-Land reference, which is identical for every model; \tref{tab:single-tmax-headline} lists all individual numerical values for all runs. Every configuration beats the ERA5-Land reference by a wide margin: MAE falls by $1.0$ to $1.5\,^{\circ}\mathrm{C}$ and CRPS by $1.4$ to $1.8\,^{\circ}\mathrm{C}$, the atmospheric models performing better than the  surface models.
+Skill is the CRPSS of \eref{eq:crpss} against the bilinear ERA5-Land reference, which is identical for every model; \tref{tab:single-tmax-headline} lists all individual numerical values for all runs. Every configuration beats the ERA5-Land reference by a wide margin: MAE falls by $1.0$ to $1.5\,^{\circ}\mathrm{C}$ and CRPS by $1.4$ to $1.8\,^{\circ}\mathrm{C}$, the atmospheric models performing better than the  surface models.
 
 \begin{table}[H]
 \centering
-\caption[Temperature metrics, CV holdout vs 2024 holdout]{Headline metrics of the seven temperature runs of \sref{sec:single-temperature} under the CV holdout (2020--2023) and the 2024 holdout. All values in $^{\circ}\mathrm{C}$ except skill. Every column is comparable across the seven models: MAE, RMSE and CRPS are measured against the fixed MeteoSwiss truth, and skill, the only baseline-relative column,  is scored against ERA5-Land. Green shades the best and red the worst model in each column. The last row is the shared bilinear ERA5-Land reference: it is deterministic, so its CRPS equals its MAE and its skill is zero by definition.}
+\caption[Temperature metrics, CV holdout vs 2024 holdout]{Headline metrics of the seven temperature runs of \sref{sec:single-temperature} under the CV holdout (2020--2023) and the 2024 holdout. All values in $^{\circ}\mathrm{C}$ except skill. Every column is comparable across the seven models: MAE, RMSE and CRPS are measured against the fixed MeteoSwiss truth, and skill, the only baseline-relative column,  is scored against ERA5-Land. Green shades the best and red the worst model in each column. The last row is the shared bilinear ERA5-Land reference: it is deterministic, so its CRPS equals its MAE and its skill is zero by definition.}
 \label{tab:single-tmax-headline}
 \footnotesize
 \begin{tabular}{|p{3cm}|p{0.85cm}|p{0.85cm}|p{0.85cm}|p{0.85cm}|p{0.85cm}|p{0.85cm}|p{0.85cm}|p{0.85cm}|}
@@ -149,22 +149,22 @@ For the feature-importance study on temperature we first have a look at the grou
 
 \subfloat[\texttt{sfc}]{%
 
-  \includegraphics[height=0.285\textwidth]{images/results/tmax__pfi_groups_mae__feature_importance_2024__baseline.png}}\\[2ex]
+  \includegraphics[height=0.285\textwidth]{images/results/tmax__pfi_groups_mae__feature_importance_2024__baseline.png}}\\[2ex]
 
 \subfloat[\texttt{atm}]{%
 
-  \includegraphics[height=0.285\textwidth]{images/results/tmax__pfi_groups_mae__feature_importance_2024__clean_solo.png}}\\[2ex]
+  \includegraphics[height=0.285\textwidth]{images/results/tmax__pfi_groups_mae__feature_importance_2024__clean_solo.png}}\\[2ex]
 
 \subfloat[\texttt{atm+sfcanchors}]{%
 
-  \includegraphics[height=0.285\textwidth]{images/results/tmax__pfi_groups_mae__feature_importance_2024__sfc_anchors.png}}
+  \includegraphics[height=0.285\textwidth]{images/results/tmax__pfi_groups_mae__feature_importance_2024__sfc_anchors.png}}
 
-\caption[Grouped permutation importance across the three input families]{Grouped permutation importance (\sref{subsec:meth-fi-groups}) for the three $30$-epoch input families: the MAE degradation in $^{\circ}\mathrm{C}$ when a whole group is permuted at once. All three models are dominated by close to surface temperature; for the surface model, the seasonal encoding is the only other group with visible impact. The atmospheric input models also show a significant importance of the diurnal cycle information. Even though low altitude pressure levels  in the second half of the day dominate the importance, the higher levels and even night time snapshots still contribute in a non negligible way.}
+\caption[Grouped permutation importance across the three input families]{Grouped permutation importance (\sref{subsec:meth-fi-groups}) for the three $30$-epoch input families: the MAE degradation in $^{\circ}\mathrm{C}$ when a whole group is permuted at once. All three models are dominated by close to surface temperature; for the surface model, the seasonal encoding is the only other group with visible impact. The atmospheric input models also show a significant importance of the diurnal cycle information. Even though low altitude pressure levels  in the second half of the day dominate the importance, the higher levels and even night time snapshots still contribute in a non negligible way.}
 
 \label{fig:single-tmax-fi-groups}
 
 \end{figure}
- \fref{fig:single-tmax-fi-groups} presents a good overview to compare the reliance of the different input families. The surface model (a) has only one data source, its data channel carries $7.3\,^{\circ}\mathrm{C}$ of importance, with the seasonal encoding ($0.26$ for its stronger channel) the only other visible input with impact. The remaining scaffold channels score exactly zero, this is by design as a time-invariant channel is unchanged by a permutation along the day axis (\sref{subsec:app-fi-limits}). The atmospheric model (b) spreads a similar importance across its temperature group ($6.2\,^{\circ}\mathrm{C}$), concentrated at $1000$ and $925\,\mathrm{hPa}$ and in the midday and afternoon hours, while geopotential and humidity contribute little but not nothing. With the anchors added (c) the pattern persists, but the $2\,\mathrm{m}$ anchor takes a substantial share ($1.3\,^{\circ}\mathrm{C}$, against $5.0$ for the temperature group) while the precipitation anchor is ignored, and the seasonal encoding falls to its smallest value of the three ($0.15$). The same grouped view for the four remaining configurations is in \sref{sec:app-fi}. The surface anchors are therefore not a substitute for the atmospheric input, but they do provide a small additional signal that the model can use.
+ \fref{fig:single-tmax-fi-groups} presents a good overview to compare the reliance of the different input families. The surface model (a) has only one data source, its data channel carries $7.3\,^{\circ}\mathrm{C}$ of importance, with the seasonal encoding ($0.26$ for its stronger channel) the only other visible input with impact. The remaining scaffold channels score exactly zero, this is by design as a time-invariant channel is unchanged by a permutation along the day axis (\sref{subsec:app-fi-limits}). The atmospheric model (b) spreads a similar importance across its temperature group ($6.2\,^{\circ}\mathrm{C}$), concentrated at $1000$ and $925\,\mathrm{hPa}$ and in the midday and afternoon hours, while geopotential and humidity contribute little but not nothing. With the anchors added (c) the pattern persists, but the $2\,\mathrm{m}$ anchor takes a substantial share ($1.3\,^{\circ}\mathrm{C}$, against $5.0$ for the temperature group) while the precipitation anchor is ignored, and the seasonal encoding falls to its smallest value of the three ($0.15$). The same grouped view for the four remaining configurations is in \sref{sec:app-fi}. The surface anchors are therefore not a substitute for the atmospheric input, but they do provide a small additional signal that the model can use.
 
 
 
@@ -186,11 +186,11 @@ Before turning to the error statistics we look at the spatial patterns of the mo
 
 \subfloat[A typical day: 25 January 2024, the median-error day with the widest observed range]{%
 
-  \includegraphics[width=0.74\textwidth]{images/tmax_spatial_section.png}}\\[1ex]
+  \includegraphics[width=0.74\textwidth]{images/tmax_spatial_section.png}}\\[1ex]
 
 \subfloat[The extreme warm day: 30 July 2024, the highest observed domain-mean maximum]{%
 
-  \includegraphics[width=0.74\textwidth]{images/tmax_spatial_section_warm.png}}
+  \includegraphics[width=0.74\textwidth]{images/tmax_spatial_section_warm.png}}
 
 \caption[Downscaled field and temperature profile along a terrain section]{Downscaled field and temperature profile along a terrain section. On the top left of both figures we have the coarse-grid ERA5-Land surface temperature reference. On the top right the ground-truth MeteoSwiss Tmax field. In between the predictions for the surface and the atmospheric models. Below we have a south-to-north cross-section over the terrain and its temperature profile. These snapshots of two difficult days of the year show how well the temperature models are able to reconstruct the fine resolution of the terrain and the temperature field. The atmospheric model is able to follow the terrain profile more closely than the surface model. On the cold-weather day the surface model shows significant deterioration over the flat terrain of the Plateau while the atmospheric model is able to follow the ground truth. On the warm day both models are able to follow the terrain profile and the ground truth.}
 
@@ -200,7 +200,7 @@ Before turning to the error statistics we look at the spatial patterns of the mo
 
 
 
-Upon studying these two figures we notice a distinct difference in the reference forecast. Over the relief the reference is off by many degrees on both days, but that error is systematic, tied to the smoothed orography, and both models correct it in winter and summer alike. The offset we observe in winter over the Plateau is a different failure: there the target temperature runs about three degrees warmer than anything the reference field suggests. This offset, occurring only on the cold day and on the plateau originates in the daily conditions rather than in the missing orography. \texttt{sfc}, whose only meteorological signal is the surface temperature field cannot detect the systematic error and inherits the bias from the reference; \texttt{atm} can pick it up from the atmospheric context and follows the trends of the target.  On the warm day no such departure occurs and the two models are nearly equivalent. The surface input therefore suffices while the fine-scale truth follows the coarse field in a predictable way, and fails where the two decouple. Two chosen days are only illustrations, but \fref{fig:single-tmax-decoupling} extends these observations to the whole domain. It splits the observations into two elevation bands, below $600\,\mathrm{m}$ and above $2000\,\mathrm{m}$, and plots the monthly MAE for the reference and the two $30$-epoch models. The seasonality of the error is clear: the reference error is largest in the cold months. The atmospheric model only shows a slight increase of error for the cold months, while the surface model approaches the reference error in the cold months. This observation is equally valid for the lowlands and the high Alps therefore the origin is seasonal rather than geographic. The effect is even more pronounced when observing the holdout data 2024 (thin lines), where in the cold months the surface model and the reference are nearly identical.
+Upon studying these two figures we notice a distinct difference in the reference forecast. Over the relief the reference is off by many degrees on both days, but that error is systematic, tied to the smoothed orography, and both models correct it in winter and summer alike. The offset we observe in winter over the Plateau is a different failure: there the target temperature runs about three degrees warmer than anything the reference field suggests. This offset, occurring only on the cold day and on the plateau originates in the daily conditions rather than in the missing orography. \texttt{sfc}, whose only meteorological signal is the surface temperature field cannot detect the systematic error and inherits the bias from the reference; \texttt{atm} can pick it up from the atmospheric context and follows the trends of the target.  On the warm day no such departure occurs and the two models are nearly equivalent. The surface input therefore suffices while the fine-scale truth follows the coarse field in a predictable way, and fails where the two decouple. Two chosen days are only illustrations, but \fref{fig:single-tmax-decoupling} extends these observations to the whole domain. It splits the observations into two elevation bands, below $600\,\mathrm{m}$ and above $2000\,\mathrm{m}$, and plots the monthly MAE for the reference and the two $30$-epoch models. The seasonality of the error is clear: the reference error is largest in the cold months. The atmospheric model only shows a slight increase of error for the cold months, while the surface model approaches the reference error in the cold months. This observation is equally valid for the lowlands and the high Alps therefore the origin is seasonal rather than geographic. The effect is even more pronounced when observing the holdout data 2024 (thin lines), where in the cold months the surface model and the reference are nearly identical.
 
 \FloatBarrier
 
@@ -210,7 +210,7 @@ Upon studying these two figures we notice a distinct difference in the reference
 
 \includegraphics[width=0.9\textwidth]{images/tmax_seasonal_decoupling.png}
 
-\caption[Seasonal decoupling of the surface input]{Seasonal decoupling of the surface input, read from the monthly MAE for the reference and the two $30$-epoch models \texttt{sfc} and \texttt{atm} over the lowlands (left, below $600\,\mathrm{m}$) and the high (right, above $2000\,\mathrm{m}$). Thick lines: the CV holdout 2020--2023, so each month is backed by four years; thin lines: the 2024 holdout. Both models stay well below the reference in every month of both bands. The systematic relief error is corrected year-round,  while the gap between \texttt{sfc} and \texttt{atm} (shaded) opens in the cold months and closes in summer, in both bands}
+\caption[Seasonal decoupling of the surface input]{Seasonal decoupling of the surface input, read from the monthly MAE for the reference and the two $30$-epoch models \texttt{sfc} and \texttt{atm} over the lowlands (left, below $600\,\mathrm{m}$) and the high (right, above $2000\,\mathrm{m}$). Thick lines: the CV holdout 2020--2023, so each month is backed by four years; thin lines: the 2024 holdout. Both models stay well below the reference in every month of both bands. The systematic relief error is corrected year-round,  while the gap between \texttt{sfc} and \texttt{atm} (shaded) opens in the cold months and closes in summer, in both bands}
 
 \label{fig:single-tmax-decoupling}
 
@@ -220,7 +220,7 @@ Upon studying these two figures we notice a distinct difference in the reference
 
 \subsection{Model Selection}\label{subsec:single-tmax-geography}
 
-\fref{fig:single-tmax-maecrpsmaps} maps both error metrics MAE and CRPS for the sfc and atm models and for the two atmospheric models with extended training. The same terrain signature appears in every panel: the overall error concentrates along the inner-Alpine valley floors and is lowest over the Plateau. The performance improvement from left to right is visible over the whole domain rather than confined to any one region. Longer training leads to significant improvements and starts, for the wind model, to reduce the error even in the valleys (green circles). CRPS and MAE agree on this spatial pattern. \fref{fig:single-tmax-windgain}, the direct comparison between the two extended-budget atmospheric models, highlights this positive impact of the wind input. So the improvement is strongest where the downscaling is hardest, along the inner-Alpine valley systems, and weakest along the Jura crest. The wind input is therefore not a general improvement, but a targeted one that helps most where it is needed. On average the wind channels buy little, a median gain of $+0.03\,^{\circ}\mathrm{C}$ per grid point with an improvement at $70\,\%$ of them, and the gain concentrates along the Rh\^one, Ticino, Grisons and Alpine Rhine valleys while the Jura crest is ceded. It is also a caution against reading permutation importance as the whole story: the $u$ and $v$ groups score near the bottom of the wind model's own importance ranking (\fref{fig:app-fi-sel-tmax}), yet carry a locally valuable signal that the global average hides.
+\fref{fig:single-tmax-maecrpsmaps} maps both error metrics MAE and CRPS for the sfc and atm models and for the two atmospheric models with extended training. The same terrain signature appears in every panel, where the overall error concentrates along the inner-Alpine valley floors and is lowest over the Plateau. The performance improvement from left to right is visible over the whole domain rather and not isolated to one region. Longer training leads to significant improvements and starts, for the wind model, to reduce the error even in the valleys (green circles). CRPS and MAE agree on this spatial pattern. \fref{fig:single-tmax-windgain}, the direct comparison between the two extended-budget atmospheric models, highlights this positive impact of the wind input. The improvement is strongest where the downscaling is hardest, along the inner-Alpine valley systems, and weakest along the Jura crest. The wind input is therefore not a general improvement, but a targeted one that helps most where it is needed. On average the wind channels buy little, a median gain of $+0.03\,^{\circ}\mathrm{C}$ per grid point with an improvement at $70\,\%$ of them, and the gain concentrates along the Rh\^one, Ticino, Grisons and Alpine Rhine valleys while the Jura crest is ceded. This observation cautions the reader against using permutation importance as the principle evaluation of channel importance: the $u$ and $v$ groups score near the bottom of the wind model's own importance ranking (\fref{fig:app-fi-sel-tmax}), yet carry a locally valuable signal that the global average hides.
 
 \begin{figure}[H]
 
@@ -283,7 +283,7 @@ Every comparison in this subsection, and the choice itself, rests on the CV hold
 
 
 
-In the generalisation regime, the model reaches a global skill of $0.71$ against the bilinear ERA5-Land reference, with a MAE of $1.03\,^{\circ}\mathrm{C}$, slightly better than on the training span. The high MAE zones in \fref{fig:single-tmax-maemap} confirm the pattern of the CV maps: the lowlands sit at $0.7$--$0.9\,^{\circ}\mathrm{C}$ while  the inner-Alpine valley floors and ridgelines present the highest $10\,\%$ of errors. However when observing the  skill panel, it becomes clear that the model scores highest along the very valleys where its absolute error is largest. This is a direct result of the reference completely lacking accuracy in these regions. The lowest skill of the model is observed in the northwest Jura area.
+In the generalisation regime, the model reaches a global skill of $0.71$ against the bilinear ERA5-Land reference, with a MAE of $1.03\,^{\circ}\mathrm{C}$, slightly better than on the training span. The high MAE zones in \fref{fig:single-tmax-maemap} confirm the pattern of the CV maps: the lowlands sit at $0.7$--$0.9\,^{\circ}\mathrm{C}$ while  the inner-Alpine valley floors and ridgelines present the highest $10\,\%$ of errors. However when observing the  skill panel, it becomes clear that the model scores highest along the very valleys where its absolute error is largest. This is a direct result of the reference completely lacking accuracy in these regions. The lowest skill of the model is observed in the northwest Jura area.
 
 
 
@@ -315,10 +315,10 @@ When looking at the domain mean bias we can observe that the model has a tendenc
 
 \subfloat[CV holdout 2020--2023, single-fold $\sigma$]{%
 
-  \includegraphics[width=0.46\textwidth]{images/results/tmax__qq_calibration__eval_cv__lbclip_wind.png}}\hfill%
+  \includegraphics[width=0.46\textwidth]{images/results/tmax__qq_calibration__eval_cv__lbclip_wind.png}}\hfill%
 \subfloat[2024 holdout, five-fold ensemble $\sigma$]{%
 
-  \includegraphics[width=0.46\textwidth]{images/results/tmax__qq_calibration__eval_2024__lbclip_wind.png}}
+  \includegraphics[width=0.46\textwidth]{images/results/tmax__qq_calibration__eval_2024__lbclip_wind.png}}
 
 \caption[PIT calibration of the selected model across regimes]{PIT Q--Q calibration of \texttt{atm+wind-clip60} under both regimes. The CV panel draws one curve per fold, each fold scoring only the block it was held out from, so the spread between the curves is the disagreement between five separately trained models; the 2024 panel draws the single curve of the five-fold ensemble. }
 
@@ -358,7 +358,7 @@ The atmospheric input generalises rather than merely fits the training years: al
 
 Within the atmospheric input, the wind channels are a local rather than a global asset. Permutation importance ranks them near the bottom (\fref{fig:app-fi-sel-tmax}), yet under the extended training budget they buy the decisive margin of improvement exactly along the hardest-to-predict valley systems (\fref{fig:single-tmax-windgain}). 
 
-Weather persists from one day to the next, so consecutive days do not carry independent information and a year of them is worth less than its calendar length suggests. Correcting for that persistence leaves 2024 with roughly $220$ effectively independent days rather than $366$ (\eref{eq:neff}). On that reduced sample the selected model's warm drift on 2024 is $+0.23\,^{\circ}\mathrm{C}$ with a $95\,\%$ interval of $[+0.16, +0.30]$, so it is a systematic offset and not a peculiarity of the evaluated year. The same test on the CV span returns $+0.08\,^{\circ}\mathrm{C}$ with an interval of $[+0.04, +0.12]$: the model is warm in both regimes, and what 2024 adds is a threefold amplification rather than the offset itself. Its amplitude is smaller than the model MAE so it is not a major flaw, but it is present.
+Weather persists from one day to the next, so consecutive days do not carry completely independent information. A year thus consists of less than than 365 independent observations. Correcting for that persistence leaves 2024 with roughly $220$ effectively independent days rather than $366$ (\eref{eq:neff}). On that reduced sample the selected model's warm drift on 2024 is $+0.23\,^{\circ}\mathrm{C}$ with a $95\,\%$ interval of $[+0.16, +0.30]$, so it is a systematic offset and not a peculiarity of the evaluated year. The same test on the CV span returns $+0.08\,^{\circ}\mathrm{C}$ with an interval of $[+0.04, +0.12]$: the model is warm in both regimes, and what 2024 adds is a threefold amplification rather than the offset itself. Its amplitude is smaller than the model MAE so it is not a major flaw, but it is present.
 
 The model selection itself is close rather than clear-cut: \texttt{atm+wind-clip60} is the most accurate model on every metric in both regimes, and it is the model we select, but \texttt{atm-clip60} would be the more robust choice for a use case that values stability over the last few hundredths of a degree. It transfers to 2024 almost without bias ($-0.02$ against $+0.23\,^{\circ}\mathrm{C}$), its calibration barely changes between the regimes, its five folds agree more closely (\fref{fig:app-sigma-decomposition}), and it does so with $95$ instead of $155$ channels.
 
@@ -366,7 +366,7 @@ Two weaknesses survive all of the seven configurations: the inner-Alpine valley 
 
  One limit applies to everything in this chapter. The Gaussian head predicts each target point on its own (\sref{subsec:meth-gaussian}). Every map is therefore a field of per-point means, and every $\sigma$ is the spread at that point alone. Reading the maps and checking the calibration point by point is sound. What cannot be checked here is whether the errors have the right spatial structure, because the model never predicts how the error at one point relates to its neighbour. The between-fold spread of \fref{fig:app-sigma-decomposition} does not fill that gap: it measures how far the five folds disagree at each point, not how neighbouring points move together. In this work we have not studied this effect. Autoregressive sampling would settle it: coherent draws from the trained model, compared against the observed fine-scale variance~\cite{bruinsma2023arcnp}.
 
-One design choice looks wrong in hindsight, and it concerns the domain rather than the model. The context grid extends well beyond the national border, but the loss is formed only at target points inside Switzerland (\sref{objective}): of the $88\,800$ points of the temperature lattice, only $46\,718$ ever carry a gradient. The model is therefore supervised only inside the Swiss border. The border region is therefore fitted with support that stops abruptly. Nothing constrains what the field does just outside, so the last kilometres inside the border are interpolated partly from grid cells whose behaviour was never scored. Extending the supervised area some way beyond the border or even the whole target set would have removed that asymmetry, and the data for it is available. Seen from the cost side the same choice is also wasteful, since roughly $47\,\%$ of the effort spent in the RBF layer and the elevation MLP goes to points that never enter the loss (\sref{subsec:meth-cost}).
+One design choice looks wrong in hindsight, and it concerns the domain rather than the model. The context grid extends well beyond the national border, but the loss is formed only at target points inside Switzerland (\sref{objective}): of the $88\,800$ points of the temperature lattice, only $46\,718$ ever carry a gradient. The model is therefore supervised only inside the Swiss border. The border region is therefore fitted with support that stops abruptly. Nothing constrains what the field does just outside, so the last kilometres inside the border are interpolated partly from grid cells whose behaviour was never scored. Extending the supervised area some way beyond the border or even the whole target set would have removed that asymmetry, and the data for it is available. Seen from the cost side the same choice is also wasteful, since roughly $47\,\%$ of the effort spent in the RBF layer and the elevation MLP goes to points that never enter the loss (\sref{sec:meth-cost}).
 
 \subsection{Conclusion}\label{subsec:single-tmax-conclusion}
 
@@ -375,7 +375,7 @@ One design choice looks wrong in hindsight, and it concerns the domain rather th
 This chapter answers the two questions it set out to ask (\sref{sec:intro-questions}) for temperature. Meteorologically relevant features do improve accuracy and calibration over surface data: atmospheric input beats surface input on every metric, keeps improving rather than degrading on the unseen 2024 year, and the selected model, \texttt{atm+wind-clip60}, reaches a skill of $0.71$ and a MAE of $1.03\,^{\circ}\mathrm{C}$ with a small, well-behaved warm bias as its only significant caveat.
 
 
-The model also learns physically meaningful structure rather than acting as a trained interpolator: it relies on lower-tropospheric temperature at the hours a warm front or a clear midday sky would matter, not on scaffold or coordinate channels, and this reliance is what lets it, unlike the surface models, generalise better to weather it never trained on. The remaining weaknesses are the MAE over the inner-Alpine valley floors, the warm tail, and the cold-season decoupling of surface-driven inputs.
+The model also learns physically meaningful structure rather than acting as a trained interpolator: it relies on lower-tropospheric temperature at the hours a warm front or a clear midday sky would matter, not on scaffold or coordinate channels, and this reliance lets it, unlike the surface models, generalise better to weather it never trained on. The remaining weaknesses are the MAE over the inner-Alpine valley floors, the warm tail, and the cold-season decoupling of surface-driven inputs.
 
 
 
@@ -480,22 +480,22 @@ $\mathrm{mm}$; RPSS is the five-category ranked probability skill against the sa
 \multicolumn{2}{c|}{\textbf{SDII bias}} & \multicolumn{2}{c|}{\textbf{RPSS}} \\
 \textbf{Run} & CV & 2024 & CV & 2024 & CV & 2024 & CV & 2024 & CV & 2024 & CV & 2024 \\
 \hline
-\texttt{precip-NLL}     & $2.82$ & $3.24$ & $+0.22$ & $+0.39$ & $0.797$ & $0.775$ & $1.017$ & $1.049$ & $+0.41$ & $+0.43$ & $0.408$ & $0.343$ \\
+\texttt{precip-NLL}     & $2.82$ & $3.24$ & $+0.22$ & $+0.39$ & $0.797$ & $0.775$ & $1.017$ & $1.049$ & $+0.41$ & $+0.43$ & $0.408$ & $0.343$ \\
 \hline
-\texttt{precip-CRPS}    & $2.72$ & $3.14$ & $-0.30$ & $-0.13$ & $0.748$ & $0.736$ & $1.042$ & $1.120$ & $-1.20$ & $-1.34$ & $0.366$ & $0.301$ \\
+\texttt{precip-CRPS}    & $2.72$ & $3.14$ & $-0.30$ & $-0.13$ & $0.748$ & $0.736$ & $1.042$ & $1.120$ & $-1.20$ & $-1.34$ & $0.366$ & $0.301$ \\
 \hline
 \texttt{precip-FT-CRPS} & $2.62$ & $3.06$ & $-0.21$ & $+0.08$ & $0.799$ & $0.778$ & $1.017$ & $1.052$ & $-0.76$ & $-0.31$ & $0.416$ & $0.348$ \\
 \hline
-\texttt{precip-WIND}    & $2.50$ & $2.81$ & $-0.03$ & $-0.23$ & $0.813$ & $0.796$ & $1.051$ & $1.053$ & $-0.60$ & $-1.07$ & $0.443$ & $0.379$ \\
+\texttt{precip-WIND}    & $2.50$ & $2.81$ & $-0.03$ & $-0.23$ & $0.813$ & $0.796$ & $1.051$ & $1.053$ & $-0.60$ & $-1.07$ & $0.443$ & $0.379$ \\
 \hline
-\texttt{precip-SFC-TP}  & $2.36$ & $2.69$ & $+0.09$ & $-0.18$ & $0.824$ & $0.807$ & $1.064$ & $1.052$ & $-0.40$ & $-0.94$ & $0.473$ & $0.407$ \\
+\texttt{precip-SFC-TP}  & $2.36$ & $2.69$ & $+0.09$ & $-0.18$ & $0.824$ & $0.807$ & $1.064$ & $1.052$ & $-0.40$ & $-0.94$ & $0.473$ & $0.407$ \\
 \hline
-Reference               & $2.29$ & $2.57$ & $+0.72$ & $+0.68$ & $0.837$ & $0.833$ & $1.385$ & $1.371$ & $-1.35$ & $-1.55$ & $0.000$ & $0.000$ \\
+Reference               & $2.29$ & $2.57$ & $+0.72$ & $+0.68$ & $0.837$ & $0.833$ & $1.385$ & $1.371$ & $-1.35$ & $-1.55$ & $0.000$ & $0.000$ \\
 \hline
 \end{tabular}
 \end{table}
 
-\tref{tab:single-precip-headline} collects the same scores as values, and adds the bias, which the slope panels do not carry. The two error measures split from the two physical ones: the reference has the lowest MAE ($2.29$ against $2.36$ for the best run) and the highest rank correlation, yet it calls a wet day $38\,\%$ too often where no run departs from the observed frequency by more than $7\,\%$ on the training span; on the unseen year only \texttt{precip-CRPS} drifts further, to $+12\,\%$. \texttt{precip-SFC-TP} is the strongest run on almost every column and \texttt{precip-CRPS} the weakest, with \texttt{precip-FT-CRPS} recovering most of what training on the CRPS from scratch gives away. The ordering is reproduced on the unseen year: nearly every column deteriorates, the reference included, so 2024 is a harder year rather than one the models fail on. The exception is the wet-day intensity, where only \texttt{precip-NLL} runs wetter than observed and every other run, like the reference, runs dry.
+\tref{tab:single-precip-headline} collects the same scores as values, and adds the bias, which the slope panels do not carry. The two error measures split from the two physical ones: the reference has the lowest MAE ($2.29$ against $2.36$ for the best run) and the highest rank correlation, yet it calls a wet day $38\,\%$ too often where no run departs from the observed frequency by more than $7\,\%$ on the training span; on the unseen year only \texttt{precip-CRPS} drifts further, to $+12\,\%$. \texttt{precip-SFC-TP} is the strongest run on almost every column and \texttt{precip-CRPS} the weakest, with \texttt{precip-FT-CRPS} recovering most of what training on the CRPS from scratch gives away. The same ordering is seen on the unseen year: nearly every column deteriorates, the reference included, so 2024 is a harder year rather than one the models fail on. The exception is the wet-day intensity, where only \texttt{precip-NLL} runs wetter than observed and every other run, like the reference, runs dry.
 
 
 \begin{figure}[H]
@@ -535,7 +535,7 @@ error.}
 \label{fig:single-precip-categories}
 \end{figure}
 
-Read by intensity category, three things follow. Almost all of the pooled skill is earned in the two categories that carry $88\,\%$ of point-days, where all five models sit close together between $+0.41$ and $+0.54$ and clearly beat the reference. Skill then falls monotonically with intensity, and the estimate loses significance as it goes: by $\geq 80\,\mathrm{mm}$ the spread across grid points is several times the mean for every model. The ordering shifts in the two heaviest categories, most of all in the last. \texttt{precip-SFC-TP}, first almost everywhere else, and \texttt{precip-NLL} both fail there, while \texttt{precip-CRPS} holds the best tail on both mean and spread and \texttt{precip-FT-CRPS} is the best compromise, keeping nearly all of \texttt{precip-WIND}'s skill in the frequent categories and nearly all of \texttt{precip-CRPS}'s tail robustness. Because RPSS weights by frequency and that category is $0.085\,\%$ of point-days, none of it registers in \tref{tab:single-precip-selection}: reading the two together is what separates a model that is uniformly good from one that is good where the days are.
+Read by intensity category, three things follow. Almost all of the pooled skill is earned in the two categories that carry $88\,\%$ of point-days, where all five models sit close together between $+0.41$ and $+0.54$ and clearly beat the reference. Skill then falls monotonically with intensity, and the estimate loses significance as it goes: by $\geq 80\,\mathrm{mm}$ the spread across grid points is several times the mean for every model. The ordering shifts in the two heaviest categories, most of all in the last. \texttt{precip-SFC-TP}, first almost everywhere else, and \texttt{precip-NLL} both fail there, while \texttt{precip-CRPS} holds the best tail on both mean and spread and \texttt{precip-FT-CRPS} is the best compromise, keeping nearly all of \texttt{precip-WIND}'s skill in the frequent categories and nearly all of \texttt{precip-CRPS}'s tail robustness. Because RPSS weights by frequency and that category is $0.085\,\%$ of point-days, none of it registers in \tref{tab:single-precip-selection}: only reading the two together separates a model that is uniformly good from one that is good where the days are.
 
 
 \fref{fig:single-precip-spatial-categories} visualises this comparison for the two best balanced models \texttt{precip-SFC-TP} and \texttt{precip-FT-CRPS}. The observed frequencies are put next to the reference and the model frequencies and the skill column presents the spatial skill distribution.
@@ -601,10 +601,10 @@ it enters the selection as a check rather than as a criterion.
 \begin{figure}[H]
 \centering
 \subfloat[\texttt{precip-SFC-TP}]{%
-  \includegraphics[width=0.49\textwidth]{images/results/precip__pit_histogram__eval_cv__clean_solo_precip_sfctp.png}}
+  \includegraphics[width=0.49\textwidth]{images/results/precip__pit_histogram__eval_cv__clean_solo_precip_sfctp.png}}
 \hfill
 \subfloat[\texttt{precip-FT-CRPS}]{%
-  \includegraphics[width=0.49\textwidth]{images/results/precip__pit_histogram__eval_cv__clean_solo_precip_ftcrps.png}}
+  \includegraphics[width=0.49\textwidth]{images/results/precip__pit_histogram__eval_cv__clean_solo_precip_ftcrps.png}}
 \caption[PIT histograms for the two selected runs]{Probability integral transform for the two
 selected runs on the CV holdout, with the randomisation at the discrete point mass described in
 \sref{subsec:app-skill-precip}. A calibrated forecast gives a flat histogram; a tilt towards low
@@ -623,7 +623,7 @@ ends rather than an absence of miscalibration.
 The miscalibration is there in both models, but it is modest and of the same kind, a tilt of the
 distribution rather than a collapse of the spread, and it points the same way for every run, so it
 reorders none of the comparisons made above. Calibration enters the
-model evaluation as a check  rather than a selection criterion and all models present acceptable calibration.
+model evaluation as a check  rather than a selection criterion and all models present acceptable calibration.
 
 \FloatBarrier
 \subsection{Model Selection}\label{subsec:single-precip-selection}
@@ -721,7 +721,7 @@ yet every run beats it by a wide margin on the five-category RPSS and on occurre
 This is the behaviour the literature predicts. A smoothed coarse field is hard to beat on a squared
 or absolute error while being wrong about the shape of the distribution, which is why the reference
 calls wet days $38\,\%$ too often where the runs stay within a few per cent. The Bernoulli--Gamma
-head is what buys that correction, as \textcite{cannon2008berngamma} report for density networks and
+head buys that correction, as \textcite{cannon2008berngamma} report for density networks and
 \textcite{vaughan2022convcnp} adopt for the same reason; the indices used here are theirs, and they
 are used precisely because a pointwise score would hide the improvement. Their European,
 station-based evaluation is not directly comparable to a Swiss gridded target, so no number is set

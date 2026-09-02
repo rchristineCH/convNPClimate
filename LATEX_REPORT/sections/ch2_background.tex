@@ -12,7 +12,7 @@ the atmospheric state rather than the coarse surface field should drive it
 
 Neural processes were introduced to address some of the shortcomings of Gaussian processes: they still return a predictive distribution, while dropping the cubic cost of exact conditioning and the need to choose a kernel by hand~\cite{garnelo2018cnp}. The family was in a second step extended with translation equivariance so that it could be applied to spatial fields~\cite{gordon2020convcnp}.
 
-A conditional neural process reads a set of context observations and returns a predictive distribution at any target coordinate, in one forward pass and without conditioning on a kernel~\cite{garnelo2018cnp}. The distribution it returns is whatever its output head parameterises, which is what lets the same backbone serve a Gaussian for temperature and a Bernoulli--Gamma for precipitation. What the original CNPs lose is geometry: they squeeze the context set into a single fixed-length vector, so where an observation sat relative to its neighbours is gone by the time the decoder sees it. Convolutional CNPs keep it by mapping the context onto a function over space and refining that with a CNN, which is also what makes the model translation equivariant~\cite{gordon2020convcnp}. 
+A conditional neural process reads a set of context observations and returns a predictive distribution at any target coordinate, in one forward pass and without conditioning on a kernel~\cite{garnelo2018cnp}. The distribution it returns is whatever its output head parameterises, so the same backbone can serve a Gaussian for temperature and a Bernoulli--Gamma for precipitation. What the original CNPs lose is geometry: they squeeze the context set into a single fixed-length vector, so where an observation sat relative to its neighbours is gone by the time the decoder sees it. Convolutional CNPs keep it by mapping the context onto a function over space and refining that with a CNN, which also makes the model translation equivariant~\cite{gordon2020convcnp}.
 
 The predictive distribution factorises into per-point marginals: a ConvCNP is calibrated at each target point but says nothing about how the error at one point relates to its neighbour, so independent draws do not form a coherent field. This belongs to the output head rather than to the family: a joint Gaussian head~\cite{andersson2023convgnp} or autoregressive sampling from a trained model~\cite{bruinsma2023arcnp} would recover the dependence. Neither is used here; both models in this work keep the factorised head.
 \section{The Potential of Atmospheric Input}\label{sec:bg-atmos-vs-surface}
@@ -37,19 +37,19 @@ A classical way to look at that vertical information is a thermodynamic diagram 
 
 \begin{figure}[H]
 
-    \centering
+\centering
 
-    \includegraphics[width=0.8\textwidth]{images/radio-soundings_emagram_payerne.20260729_1200.pdf}
+\includegraphics[width=0.8\textwidth]{images/radio-soundings_emagram_payerne.20260729_1200.pdf}
 
-    \caption[Emagram of the Payerne radiosounding]{Emagram of the radiosounding at Payerne (station 06610) on 29 July 2026, 12~UTC. Temperature and dew point are plotted against pressure, with the wind profile on the right and height given in both km and kfeet. Copy from MeteoSwiss~\cite{meteoswiss_radiosounding}.}
+\caption[Emagram of the Payerne radiosounding]{Emagram of the radiosounding at Payerne (station 06610) on 29 July 2026, 12~UTC. Temperature and dew point are plotted against pressure, with the wind profile on the right and height given in both km and kfeet. Copy from MeteoSwiss~\cite{meteoswiss_radiosounding}.}
 
-    \label{fig:emagram-payerne}
+\label{fig:emagram-payerne}
 
 \end{figure}
 
 
 
-Alpine weather and specifically precipitation is also strongly seasonal and diurnal: winter events are predominantly frontal, whereas summer events are largely convective and peak in the afternoon~\cite{nisi2020}. On a typical summer day, a stable layer caps the boundary layer in the morning and suppresses convection. Solar heating gradually erodes it, and once it breaks, thermals deepen the convective boundary layer to roughly \SIrange{2}{3}{km}; where sufficient convective energy is available, the resulting cumulus clouds grow far beyond that and produce thunderstorms. Whether the cap breaks at all depends on its strength in competition with the heat supplied at the surface, which is why a single daily snapshot of the atmosphere is likely not enough to capture these events.
+Alpine weather and specifically precipitation is also strongly seasonal and diurnal: winter events are predominantly frontal, whereas summer events are largely convective and peak in the afternoon~\cite{nisi2020}. On a typical summer day, a stable layer caps the boundary layer in the morning and suppresses convection. As the sun gradually heats the ground, this stable layer is resolvced. Once it breaks, thermals develop and the convective boundary layer expands to roughly \SIrange{2}{3}{km}; where sufficient convective energy is available, the resulting cumulus clouds grow far beyond that and produce thunderstorms. Whether the cap breaks at all depends on its strength in competition with the heat supplied at the surface, which is why a single daily snapshot of the atmosphere is likely not enough to capture these events.
 
 
 
@@ -57,5 +57,5 @@ We aim here to develop a model that can learn the relevant weather processes, ra
 
 
 
-Sampling through the day is what turns a static description of the atmosphere into one that possibly can describe the physical process. \textcite{vaughan2022convcnp} already combine atmospheric with surface channels, but they report neither the timing of those fields nor what each group of channels contributes, which is what \sref{sec:meth-fi} sets out to measure.
+Sampling through the day turns a static description of the atmosphere into one that possibly can describe the physical process. \textcite{vaughan2022convcnp} already combine atmospheric with surface channels, but they report neither the timing of those fields nor what each group of channels contributes; \sref{sec:meth-fi} sets out to measure that.
 

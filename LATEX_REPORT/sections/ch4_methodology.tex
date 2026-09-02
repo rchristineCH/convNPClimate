@@ -19,7 +19,7 @@ where $Z$ is the context tensor on the input grid, $e(x)$ the terrain features a
 \subsection{Encoder, CNN Processor, and RBF Final Layer}\label{subsec:meth-backbone}
 In this part of the architecture, the model learns the relationships between the input channels and how to map them to the target points. The encoder processes the input context channels, which are stacked into a tensor $Z$ on their native grid. This tensor passes through the encoder, a depthwise set convolution that normalises each channel by its observation density, followed by a linear layer that lifts the channels to the working width of the CNN. The CNN backbone is a ResNet that learns the meteorological and spatial structure of the fields on the input grid. To simplify the use of different predictive distributions, the output distribution parameters are generated in a separate layer (MLP (grid to params)). The distribution parameters are then passed to a final layer that maps them from the input grid to the target points using RBF interpolation.
 
-The RBF interpolation layer lets the model predict at arbitrary target points rather than only on the input grid. That is what downscaling needs, since the fine target locations do not align with the coarse lattice, and it is also what allows the model to be queried directly at station coordinates, as in \textcite{vaughan2022convcnp} or in \cref{ch:stations}.
+The RBF interpolation layer lets the model predict at arbitrary target points rather than only on the input grid. Downscaling needs exactly this, since the fine target locations do not align with the coarse lattice, and the same property allows the model to be queried directly at station coordinates, as in \textcite{vaughan2022convcnp} or in \cref{ch:stations}.
 The model learns for each parameter $k$ of the distribution (for example $\mu, \sigma$ for the Gaussian) its own length scale $\ell_k$ for the RBF kernel that is used to interpolate in 2D space the parameters from the input grid to the target points,
 \begin{equation}
     \tilde{\theta}_k(x) \;=\; \sum_{i,j} h_k(g_{ij})\, \exp\!\left(-\frac{\lVert x - g_{ij} \rVert^{2}}{2\,\ell_k^{2}}\right),
@@ -54,14 +54,8 @@ For temperature, this distribution is a Gaussian: the model outputs a mean $\mu$
     p(y) \;=\; \frac{1}{\sqrt{2\pi\sigma^{2}}} \exp\!\left(-\frac{(y - \mu)^{2}}{2\sigma^{2}}\right).
 \label{eq:gauss-density}
 \end{equation}
-\fref{fig:meth-tmax-dist} illustrates the resulting density: one mean and one spread per target point and day.
+This gives one mean and one spread per target point and day (\sref{sec:app-distributions} illustrates the resulting density).
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.9\textwidth]{images/16_tmax_distribution.png}
-\caption[The Gaussian predictive distribution]{The Gaussian predictive density for a single target point and day. The model outputs the two parameters: the mean $\mu$ locates the distribution and the standard deviation $\sigma$ sets its width, shown here for $\mu = 24.0\,^{\circ}\mathrm{C}$ and $\sigma = 1.5\,^{\circ}\mathrm{C}$.}
-\label{fig:meth-tmax-dist}
-\end{figure}
 \subsection{Bernoulli--Gamma for Precipitation}\label{subsec:meth-likelihoods}
 
 Precipitation needs a different shape. Most days are exactly dry, $0\,\mathrm{mm}$, and the wet days follow a skewed, strictly positive distribution (\sref{subsec:data-coords}). Following \textcite{cannon2008berngamma} and \textcite{vaughan2022convcnp}, we therefore use a Bernoulli--Gamma mixture: $\rho$ is the probability that the day is wet, and $\alpha$ and $\beta$ are the shape and rate of a Gamma distribution for the amount of precipitation. Write $g(y; \alpha, \beta)$ for that Gamma density and $G(y; \alpha, \beta)$ for its cumulative distribution function. A wet day is scored by the probability of rain times the density of the amount, a dry day by the probability of staying dry,
@@ -78,17 +72,7 @@ The three parameters are easiest to read as the probability of at least $t$ mill
     P(Y \geq t) \;=\; \rho \, \bigl(1 - G(t; \alpha, \beta)\bigr),
 \label{eq:bg-exceedance}
 \end{equation}
-which reads directly: the day has to be wet, which costs $\rho$, and the amount then has to reach $t$. This exceedance probability is what the precipitation indices and skill scores later ask of the model (\sref{subsec:app-skill-precip}). \fref{fig:meth-precip-dials} visualises different shapes of possible output distributions. $\rho$ reweights the same wet body without changing its shape such that the gap to 1 at 0 mm is the probability of a dry day. $\beta$ changes how much precipitation accumulates once it does rain, stretching the curve to the right while the dry mass stays where it is. $\alpha$ changes the shape of a wet day: a given average is reached either through many small amounts or through fewer, heavier ones. The provided examples are realistic draws from a model output.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{images/17_precip_wet_dry_day.png}
-\caption[Bernoulli--Gamma distribution]{The Bernoulli--Gamma head read as the probability of at least $t$ millimetres, with one parameter turned per panel and the other two held constant. All parameter values are sampled from one of the model own outputs}
-
-\label{fig:meth-precip-dials}
-\end{figure}
-
-\fref{fig:meth-precip-dials} reads the distribution at a single point and day; \sref{subsec:app-skill-precip} explains how these point-day distributions are pooled into the frequencies the results chapter actually reports.
+which reads directly: the day has to be wet, which costs $\rho$, and the amount then has to reach $t$. The precipitation indices and skill scores later ask exactly this exceedance probability of the model (\sref{subsec:app-skill-precip}). $\rho$ reweights the same wet body without changing its shape such that the gap to 1 at 0 mm is the probability of a dry day. $\beta$ changes how much precipitation accumulates once it does rain, stretching the curve to the right while the dry mass stays where it is. $\alpha$ changes the shape of a wet day: a given average is reached either through many small amounts or through fewer, heavier ones (\sref{sec:app-distributions} visualises these shapes at a single point and day). \sref{subsec:app-skill-precip} explains how these point-day distributions are pooled into the frequencies the results chapter actually reports.
 
 \section{Training and Evaluation Setup}\label{sec:meth-training}
 
@@ -113,8 +97,12 @@ The loop is identical for both variables; only the objective differs, and with i
 
 The five-fold split of \fref{fig:meth-cv-scheme} creates two deployment regimes: in the cross-validation evaluation each model predicts only the holdout block it never trained on, so every day is predicted exactly once by an independent model, whereas in all inference situation on unseen data the five trained models act together as an ensemble (\sref{sec:meth-inference}).
 
+No hyperparameters are tuned on the folds, so there is no separate model to refit on the merged span afterwards the way a tune-then-refit workflow would require. The five fold models are trained anyway, to give every training-period day an honest holdout score; this is the CV-holdout score used throughout \cref{ch:single-model} to compare configurations and objectives against each other. At inference, we simply keep all five and ensemble them (\sref{sec:meth-inference}), rather than picking one at random or paying for a sixth training run on the merged span.
+
+The folds are temporal blocks, not independent resamples: they were built that way so a held-out block cannot leak near-duplicate weather from its neighbours (\sref{subsec:meth-cv}), but it also means any two fold models still share three of their four training blocks. That is far more overlap than the independent ensemble members this technique is usually validated on \cite{dutschmann2023kfoldensemble}, so the between-fold spread in \eref{eq:fold-ensemble} likely understates the true disagreement between models rather than measuring it cleanly. The advantage of ensembling is no retraining is needed and still likely reduces prediction noise, even with correlated folds; the disadvantage is that its uncertainty signal is conservative rather than calibrated, and its accuracy against a genuine single model is untested. A model trained on the full 2020--2023 span would add a clean baseline to check that accuracy against, and access to all five blocks of training data at once, rather than the four out of five each fold model sees.
+
 \subsection{Objective Functions}\label{objective}
-The negative log-likelihood objectives follow \textcite{vaughan2022convcnp}. For the precipitation model, we extended the training with a CRPS-based objective function, used both from scratch and as a fine-tune of a converged likelihood model. The fine-tune is what earns the third run its place: ten of its epochs recover more of the held-out CRPS than thirty epochs of training on the CRPS from scratch (\sref{sec:app-precip-training}).
+The negative log-likelihood objectives follow \textcite{vaughan2022convcnp}. For the precipitation model, we extended the training with a CRPS-based objective function, used both from scratch and as a fine-tune of a converged likelihood model. Ten epochs of fine-tuning recover more of the held-out CRPS than thirty epochs of training on it from scratch, which is why the fine-tune counts as its own, third run rather than a variant of the second (\sref{sec:app-precip-training}).
 
 Whichever objective is used, it is evaluated over the Swiss domain alone. The input grid extends beyond the national border (\tref{tab:data-context}), but the loss is formed only at the MeteoSwiss target points that carry an observation: target values outside the analysis domain are missing, and every objective drops them before averaging. Of the $88\,800$ points of the temperature lattice, $46\,718$ ($53\,\%$) are inside Switzerland and enter the loss; the precipitation lattice contributes about $64\,\%$ of its $98\,050$ points. The exclusion happens at the loss and nowhere earlier. The context grid is never cropped, the full rectangular MeteoSwiss product grid is flattened into the target-point tensor with the outside-Switzerland points kept as \texttt{NaN} rather than removed, and the model's forward pass, the RBF final layer and the elevation MLP alike, predicts at every one of those points, including the ones with no observation. 
 \subsubsection*{Temperature}\label{subsubsec:meth-train-tmax}
@@ -137,7 +125,7 @@ Two objectives are implemented and selected per run. The first is the negative l
 \end{equation}
 with $y$ the observed accumulation, $\rho$ the predicted probability of a wet day, $\alpha$ and $\beta$ the predicted shape and rate of the Gamma body, and $r=1$ on wet days ($y>0$) and $r=0$ on dry days; the bar is the average over all target points and days of a batch.
 
-The second objective is the CRPS of \eref{eq:crps}, which judges the whole predictive distribution instead of the density at the value that occurred. It has no closed form for the mixture, so it is estimated in the kernel form given by \textcite{gneiting2007scoring}, which writes the score as expected absolute differences and therefore needs only draws from the predictive distribution. Applied to the mixture, this leaves the dry outcome analytic and only the two Gamma expectations to sample, each from its own independent set of $25$ draws taken with the implicit reparameterisation of \textcite{figurnov2018implicit}, which is what carries the gradient to $\alpha$ and $\beta$. 
+The second objective is the CRPS of \eref{eq:crps}, which judges the whole predictive distribution instead of the density at the value that occurred. A closed form for the Bernoulli--Gamma mixture is plausibly derivable, by the same route used for the censored-shifted Gamma distribution of \textcite{scheuerer2015csgd} and for the Gamma component's own closed-form CRPS \cite{gneiting2007scoring}, but we did not pursue this derivation; instead the score is estimated in the kernel form given by \textcite{gneiting2007scoring}, which writes the score as expected absolute differences and therefore needs only draws from the predictive distribution. This choice is simpler to implement and drops in directly wherever the objective is evaluated, including during backpropagation. Applied to the mixture, this leaves the dry outcome analytic and only the two Gamma expectations to sample, each from its own independent set of $25$ draws taken with the implicit reparameterisation of \textcite{figurnov2018implicit}, which carries the gradient to $\alpha$ and $\beta$.
 
 The CRPS objective is used either from scratch or to fine-tune a model first trained on the log-likelihood, and the same estimate is evaluated on the log-likelihood runs as well, so all precipitation runs share one CRPS curve (\sref{sec:app-precip-training}). Each fold keeps the checkpoint with the best held-out score under the objective it is trained on, and the gradient norm is clipped to $1$.
 
@@ -236,17 +224,27 @@ For inference all five folds (\sref{subsec:meth-cv}) predict every day and act t
 with $K = 5$ folds. For precipitation, whose head has no single mean and spread, the ensemble averages the three Bernoulli--Gamma parameters over the folds.
 
 
+\section{Computational Cost}\label{sec:meth-cost}
+
+The model is small in weights and expensive in use. The configurations range from $282\,000$ to
+$325\,000$ parameters, $1.1$ to $1.3\,\mathrm{MB}$ in single precision; the cost is set by the tens
+of thousands of target points rather than by the network, dominated by the elevation MLP and the
+RBF distance matrix (\sref{sec:app-cost}).
+
+In practice a single mid-range GPU is sufficient: at the batch size of $8$ used here the forward
+pass peaks below $2\,\mathrm{GB}$, the backward pass raises the full training step to just below
+$2.2\,\mathrm{GB}$, and inference roughly halves that, so both fit on consumer hardware, while a
+server allows several configurations to be trained at once. Should the cost ever become binding,
+the easiest levers are a narrower elevation MLP, an RBF kernel restricted to the grid cells within
+a few length scales of each target point, or a distance matrix kept in reduced numerical precision.
+
 \section{Feature Importance}\label{sec:meth-fi}
 
 Whether the model learns physically meaningful relationships (\cref{ch:introduction}) cannot be read
-off its weights, because the encoder mixes all channels immediately after its per-channel smoothing.  Therefore specialised techniques are needed to attribute the model's output to its inputs. The goal is to understand which input channels the model relies on most, and whether that reliance is physically plausible.
+off its weights, since the encoder mixes all channels immediately after its per-channel smoothing. This section attributes the model's output to its inputs, to see which channels it relies on most and whether that reliance is physically plausible.
 
 \subsection{Choosing the Attribution Method}\label{subsec:meth-fi-choice}
-\tref{tab:meth-fi-methods} compares candidate attribution methods. Three requirements decide the suitable choice here: the result has to describe the trained model as a whole, it has to query the model itself rather than a substitute for it, and it has to be expressed as a loss of accuracy so that models can be compared with each other. Permutation importance with time as the permutation axis meets  all three and is the cheapest of them computationally. 
-
-Two properties of the estimator bound what the resulting importances can support. A channel that does not vary in time is unchanged by a permutation along the day axis, so latitude, longitude and the coarse elevation score exactly zero by construction rather than by irrelevance; and what is measured is the loss of accuracy when a channel is destroyed, which is a statement about reliance and not about causation. The remaining limitations are set out in \sref{subsec:app-fi-limits}.
-
-For reference LIME was also executed as a cross-check (\sref{subsec:app-fi-lime}). SHAP was implemented in the codebase but not systematically run on the models due to its high computational cost. It answers the same question at a multiple of the cost, however high correlation between inputs can lead to a bias of the attribution \cite{aas2021dependent}.
+\tref{tab:meth-fi-methods} compares candidate attribution methods against three requirements: the result must describe the trained model as a whole, query the model itself rather than a substitute, and be expressed as a loss of accuracy so models can be compared. Permutation importance with time as the permutation axis meets all three and is the cheapest computationally, so it is used as the primary method, with LIME run as a cross-check (\sref{subsec:app-fi-lime}) and SHAP implemented but not systematically run due to its cost. The estimator's limitations (what a time-invariant channel or a destroyed-accuracy measure can and cannot support) are set out in \sref{subsec:app-fi-limits}.
 
 \begin{table}[htbp]
 \centering
@@ -367,39 +365,6 @@ Some limitations bound what these importances support; they are set out in
 \sref{subsec:app-fi-limits}.
 
 \FloatBarrier
-\subsection{Computational Cost}\label{subsec:meth-cost}
-
-The model is small in weights and expensive in use. The configurations range from $282\,000$ to
-$325\,000$ parameters, $1.1$ to $1.3\,\mathrm{MB}$ in single precision. The cost is set by the tens of thousands of target points
-rather than by the network. The elevation MLP is where it accumulates: it runs once per target point
-and never sees the input grid, and it accounts for most of the arithmetic on both grids
-(\fref{fig:meth-cost-ops}). Underneath it the distance matrix holds a fixed allocation that is far
-larger on the surface grid than on the atmospheric one, which is why the atmospheric configuration
-is the cheaper of the two in memory as well as in operations despite carrying many more input
-channels (\fref{fig:meth-cost-ops}, \fref{fig:meth-cost-mem}).
-
-In practice a single mid-range GPU is sufficient: at the batch size of $8$ used here the forward
-pass peaks below $2\,\mathrm{GB}$ (\fref{fig:meth-cost-mem}), the backward pass raises the full
-training step to just below $2.2\,\mathrm{GB}$, and inference roughly halves that, so both fit on consumer hardware,
-while a server allows several configurations to be trained at once. Should the cost ever become
-binding, the easiest levers are a narrower elevation MLP, an RBF kernel restricted to the grid cells
-within a few length scales of each target point, or a distance matrix kept in reduced numerical
-precision.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{images/component_cost_ops.png}
-    \caption[Computational cost per component]{Computational cost per component: multiply-accumulate operations of one day, in millions, split into the architectural components.}
-    \label{fig:meth-cost-ops}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.86\textwidth]{images/component_cost_mem_profile.png}
-    \caption[Memory through a training forward pass]{Memory estimation live at each stage of a training forward pass of the Bernoulli--Gamma configurations, the heavier of the two output heads, at the batch of eight days used in this work, with the transient inside each stage drawn above it. The peak is a moment inside a single stage, not a sum over stages.}
-    \label{fig:meth-cost-mem}
-\end{figure}
 
 \FloatBarrier
 

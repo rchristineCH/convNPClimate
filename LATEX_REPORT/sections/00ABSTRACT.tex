@@ -9,7 +9,7 @@ one-kilometre MeteoSwiss analysis grids with Convolutional Conditional Neural Pr
 architecture that predicts a full probability distribution at arbitrary target coordinates. A
 Gaussian output head serves temperature and a Bernoulli--Gamma head precipitation. Twelve model
 configurations, seven for temperature and five for precipitation, are trained on 2020--2023 under a temporal five-fold cross-validation and
-evaluated twice: on their held-out folds and on 2024, a year no fold ever saw. A permutation-based
+evaluated twice: on their held-out folds, and on 2024, a year no fold ever saw, where the five fold models are combined into an ensemble. A permutation-based
 feature-importance study measures the reliance on the different input channels. Finally, all selected
 models are verified against station observations that entered no training or selection step.
 

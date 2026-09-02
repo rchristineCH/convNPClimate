@@ -63,8 +63,8 @@ At the $139$ rain gauges the lowest median skill is $+0.43$.
 Evaluated on the predicted accumulation in millimetres, no run beats
 the ERA5 reference on the gridded target. One run reverses that verdict at the gauges:
 \texttt{precip-SFC-TP} beats the reference there in both regimes, by $0.13$ and
-$0.12\,\mathrm{mm\,day^{-1}}$, which is what a smoothed reference scored against a smoothed,
-interpolated truth would be expected to do.
+$0.12\,\mathrm{mm\,day^{-1}}$, as expected when a smoothed reference is scored against a smoothed,
+interpolated truth.
 
 One known weakness of statistical downscaling is the drizzle bias of the coarse field, which calls wet days $38\,\%$ too often. The Bernoulli--Gamma head removes that bias and restores the observed intensity along with it. 
 
@@ -74,7 +74,7 @@ On the precip models we showed that objective can impact the extreme tail. This 
 
 \section{Limitations and Future Work}\label{sec:concl-future}
 
-Five limitations bound what the results above can claim, and three directions for future work follow from them.
+The limitations below bound what the results above can claim, and point to directions for future work.
 
 \begin{itemize}
 \item \textbf{No spatial coherence.} The factorised head predicts one marginal per target point
@@ -98,4 +98,5 @@ one, the seasonal-input result for a wider one, and neither was tested.
 \item \textbf{Is the learnt relationship physically meaningful?} The feature-importance study shows reliance on physically sensible inputs, which is evidence, not proof. Applying the trained model to comparable terrain elsewhere in the Alpine range would test whether the relationship travels, and the architecture permits it without retraining: the trunk is convolutional, the target set is arbitrary, and the elevation features are physical quantities computable from any terrain model. Only the coordinate channels are anchored to the training domain, and the near-zero reliance on them is exactly what such a transfer would confirm or refute; a retraining without latitude and longitude as inputs would remove that anchor altogether and show directly how much the model needs them.
 \item \textbf{Is the model robust to climate change?} The training years are historical, so nothing here shows whether the learnt mapping holds in a warmer climate; scenario-driven input would test that.
 \item \textbf{Weather models over reanalysis.} The input is reanalysis. Driving the same model with forecast fields, which carry different biases, would show whether the downscaling survives them, and would open the route to real-time use.
+\item \textbf{The fold ensemble against a single model.} Inference uses the five cross-validation fold models as an ensemble rather than a model retrained on the full 2020--2023 span (\sref{subsec:meth-cv}); this was not compared against, so it is untested whether the ensemble is actually more accurate. A model trained on the full span would add a clean baseline to check that against, and access to all five blocks of training data at once, rather than the four out of five each fold model sees.
 \end{itemize}
